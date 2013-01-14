@@ -1,0 +1,43 @@
+<message> 
+	<user>identidiant utilisateur</user> 
+	<type>auth</type> 
+	<status>request</status> 
+</message>
+
+
+<message> 
+	<type>auth</type> 
+	<status>challenge</status> 
+	<info>
+		<number>nombre aléatoire</number>
+	</info>
+</message>
+
+<message>
+	<user>identidiant utilisateur</user>
+	<type>auth</type> 
+	<status>challenge_answer</status> 
+	<info>
+		<number>nombre aléatoire</number>
+	</info>
+</message>
+
+
+<message> 
+	<type>auth</type> 
+	<status>accepted</status> 
+	<info>
+		<sessionid>identifiant de sessions</sessionid>
+	</info>
+</message>
+
+
+<message> 
+	<type>auth</type> 
+	<status>denied</status> 
+</message>
+
+<message>
+	<type>error</type> 
+	<status>auth</status> 
+</message>
