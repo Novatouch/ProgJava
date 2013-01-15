@@ -1,0 +1,13 @@
+<message> 
+	<user>identifiant utilisateur</user> 
+	<type>echo</type> 
+	<status>request</status>
+</message>
+
+
+<message> 
+	<type>echo</type> 
+	<status>answer</status> 
+</message>
+
+
