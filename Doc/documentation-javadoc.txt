@@ -1,0 +1,80 @@
+Exemple de javadoc:
+
+Explications:
+
+Lien vers une autre page de la javadoc
+ @see 
+paramètres possibles: 
+
+	NomClasse externe
+	NomClasse#methode
+	NomClasse#attribut
+
+
+
+package ...;
+/**
+ * <b>Présentation rapide de la classe.</b>
+ * <p>
+ * Liste des différents attribus :
+ * <ul>
+ * <li> 1 attribut ...</li>
+ * </ul>
+ * </p>
+ * <p>
+ * 
+ * 
+ * </p>
+ * 
+ * @see Lien vers d'autres classes
+ * 
+ * @author Nom
+ * @version 1.0
+ */
+
+public class NomClasse{
+
+	/**
+         * Courte présentation attribut. Cet attribut n'est pas modifiable.
+	 * <p>
+	 * Si la présentation est plus grande petit paragraphe
+         * </p>
+	 * Lien vers les methodes permettant d'accéder ou de modifier l'attribut
+         * @see Zero#Zero(int, String)
+         * @see Zero#getId()
+         */
+	private variable;
+
+	
+	/**
+         * Constructeur NomClasse.
+         * <p>
+         * A la construction d'un objet NomClasse, courte description de ce qui se passe
+         * </p>
+         * 
+         * @param param1
+         *            Presentation paramètre.
+         * @param parma2
+         *            Le même.
+         * 
+	 * liste des attributs modifiés par le constructeur
+         * @see NomClasse#attribut modifié
+	 */
+	public NomClasse (type param1, type param2) {
+	}
+
+
+  	/**
+         * Retourne l'adresse du profil du Zero.
+         * 
+	 * @param pseudo
+         *            description rapide du paramètre
+         * @return courte description de ce qui est retournée.
+         * 
+         * @throws NomExeption  Cas dans lequel l'exeption est générée. 
+         * 
+	 * Liste lien classe, méthodes et attributs utiles dans cette methode
+         * @see ...
+         */
+	public type nomMethode(type param1, type param2) throws NomExeption {
+	}
