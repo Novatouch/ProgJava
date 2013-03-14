@@ -37,6 +37,11 @@
 	<status>denied</status> 
 </message>
 
+<message> 
+	<type>auth</type> 
+	<status>already authenticated</status> 
+</message>
+
 <message>
 	<type>error</type> 
 	<status>auth</status> 
