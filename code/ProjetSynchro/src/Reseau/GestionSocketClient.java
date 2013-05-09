@@ -2,6 +2,12 @@ package Reseau;
 
 import java.io.IOException;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
 
 /**
  * <b>Cette classe regroupe les objets nécessaires à la création d'une connexion du coté client.</b>
@@ -43,4 +49,38 @@ public class GestionSocketClient {
 	 * @see GestionSocketServeur#socket
 	 * 
 	 */
+	private Socket socket;
+	private PrintWriter out;
+	private BufferedReader in;
+	
+	
+	public GestionSocketClient(Socket _socket) throws IOException{
+		
+		this.socket = _socket;
+		this.out = new PrintWriter(_socket.getOutputStream());
+		this.in = new BufferedReader (new InputStreamReader (_socket.getInputStream()));
+	}
+	
+	public GestionSocketClient(InetAddress _InetAddress, Integer _port ) throws UnknownHostException, IOException{
+		
+		this.socket = new Socket(_InetAddress, _port); ;
+		this.out = new PrintWriter(this.socket.getOutputStream());
+		this.in = new BufferedReader (new InputStreamReader (this.socket.getInputStream()));
+	}
+	
+	public void envoyerMessage(String _chaine){
+		
+		 out.println(_chaine);
+	     out.flush();
+	}
+	
+	public String recevoirMessage() throws IOException{
+		
+		return in.readLine();
+	}
+	
+	public void fermerSocket() throws IOException{
+		
+		this.socket.close();
+	}
 }

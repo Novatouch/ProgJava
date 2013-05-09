@@ -47,10 +47,10 @@ public class GestionSocketServeur {
 	 * @see GestionSocketServeur#socket
 	 * 
 	 */
-	public GestionSocketServeur() throws IOException{
+	public GestionSocketServeur(Integer _port, Integer _nbClientMax) throws IOException{
 		
 		//initialisation socket
-		socketserver = new ServerSocket(5000, 5);
+		socketserver = new ServerSocket(_port, _nbClientMax);
 		System.out.println("INFORMATION: serveur > lancement du serveur sur le port : "+ socketserver.getLocalPort());
 		
 	}
@@ -80,8 +80,5 @@ public class GestionSocketServeur {
 		
 		socketserver.close();
 	}
-
-
-	
 	
 }
