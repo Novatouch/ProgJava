@@ -61,9 +61,13 @@ public class GestionSocketClient {
 		this.in = new BufferedReader (new InputStreamReader (_socket.getInputStream()));
 	}
 	
-	public GestionSocketClient(InetAddress _InetAddress, Integer _port ) throws UnknownHostException, IOException{
+	public GestionSocketClient(String _identifiantServeur, Integer _port ) throws UnknownHostException, IOException{
 		
-		this.socket = new Socket(_InetAddress, _port); ;
+		InetAddress ipServeur; 
+		ipServeur = InetAddress.getByName(_identifiantServeur);
+		
+		
+		this.socket = new Socket(ipServeur, _port); ;
 		this.out = new PrintWriter(this.socket.getOutputStream());
 		this.in = new BufferedReader (new InputStreamReader (this.socket.getInputStream()));
 	}

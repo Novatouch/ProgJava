@@ -30,6 +30,7 @@ public class GestionSocketServeur {
      */
 	
 	private ServerSocket socketserver;
+	private Socket socketClient;
 
 	/**
      * Constructeur GestionSocketServeur.
@@ -64,7 +65,7 @@ public class GestionSocketServeur {
      */
 	public Socket accepterClient() throws IOException {
 		
-		Socket socketClient = new Socket();
+		socketClient = new Socket();
 		socketClient = socketserver.accept();
 		
 		return socketClient;
@@ -77,7 +78,7 @@ public class GestionSocketServeur {
      * 
      */
 	public void arreterServeur() throws IOException {
-		
+		System.out.println("INFORMATION: serveur > arrêt du serveur");
 		socketserver.close();
 	}
 	
