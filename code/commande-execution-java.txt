@@ -1,0 +1,9 @@
+# se rendre dans le répertoire
+cd git/ProgJava/code/java -cp bin
+
+# exécuter programme test socket
+java -cp bin Reseau.testClient
+java -cp bin Reseau.testServeur 
+
+# exécuter programme test classe configuration
+java -cp bin Client.testConfiguration
