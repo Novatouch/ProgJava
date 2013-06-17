@@ -1,9 +1,9 @@
 # se rendre dans le répertoire
-cd git/ProgJava/code/java -cp bin
+cd git/ProgJava/code/ProjetSynchro/
 
 # exécuter programme test socket
-java -cp bin Reseau.testClient
-java -cp bin Reseau.testServeur 
+java -cp bin mainServeur
+java -cp bin mainClient
 
 # exécuter programme test classe configuration
 java -cp bin Client.testConfiguration

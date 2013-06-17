@@ -1,19 +1,25 @@
-<message> 
+<message>
+	<user>identidiant utilisateur</user>
+	<sessionid>identifiant de sessions</sessionid>
 	<type>echo</type> 
 	<status>request</status>
 </message>
 
-<message> 
+<message>
+	<user>identidiant utilisateur</user>
+	<sessionid>identifiant de sessions</sessionid>
 	<type>echo</type> 
 	<status>request</status>
-	<info>
+
 		<synchronisation>active</synchronisation>
-	</info>
+
 </message>
 
-<message> 
+<message>
+	<user>identidiant utilisateur</user>
+	<sessionid>identifiant de sessions</sessionid>
 	<type>echo</type> 
-	<status>answer</status> 
+	<status>answer</status>
 </message>
 
 

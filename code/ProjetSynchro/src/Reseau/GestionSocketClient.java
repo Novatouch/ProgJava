@@ -70,6 +70,21 @@ public class GestionSocketClient {
 		this.socket = new Socket(ipServeur, _port); ;
 		this.out = new PrintWriter(this.socket.getOutputStream());
 		this.in = new BufferedReader (new InputStreamReader (this.socket.getInputStream()));
+		
+		//socket.setSoTimeout(5000);
+	}
+	
+	public GestionSocketClient(String _identifiantServeur, Integer _port, Integer _timeout) throws UnknownHostException, IOException{
+		
+		InetAddress ipServeur; 
+		ipServeur = InetAddress.getByName(_identifiantServeur);
+		
+		
+		this.socket = new Socket(ipServeur, _port); ;
+		this.out = new PrintWriter(this.socket.getOutputStream());
+		this.in = new BufferedReader (new InputStreamReader (this.socket.getInputStream()));
+		
+		socket.setSoTimeout(_timeout);
 	}
 	
 	public void envoyerMessage(String _chaine){
@@ -83,6 +98,10 @@ public class GestionSocketClient {
 		return in.readLine();
 	}
 	
+	public String recevoirMessageTimeout() throws IOException{
+		
+		return in.readLine();
+	}
 	public void fermerSocket() throws IOException{
 		
 		this.socket.close();

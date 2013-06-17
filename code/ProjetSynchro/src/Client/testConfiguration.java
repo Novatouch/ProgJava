@@ -10,15 +10,16 @@ public class testConfiguration {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
-		Configuration config;
+		ConfigurationClient config;
 		
 		
 		try {
-			config = new Configuration();
+			config = new ConfigurationClient();
 			
 			System.out.println(config.getServeurAdresse());
 			System.out.println(config.getUtilisateur());
 			System.out.println(config.getServeurPort().toString());
+			System.out.println(config.getMotDePasse().toString());
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

@@ -1,15 +1,17 @@
 <message> 
-	<user>identidiant utilisateur</user> 
+	<user>identidiantutilisateur</user> 
 	<type>auth</type> 
 	<status>request</status> 
 </message>
 
-
-<message> 
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><message><user>philippe</user> <type>auth</type> <status>challenge</status><number>666</number></message>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<message>
+	<user>philippe</user> 
 	<type>auth</type> 
 	<status>challenge</status> 
 	<info>
-		<number>nombre aléatoire</number>
+		<number>666</number>
 	</info>
 </message>
 
@@ -24,6 +26,7 @@
 
 
 <message> 
+	<user>identidiant utilisateur</user>
 	<type>auth</type> 
 	<status>accepted</status> 
 	<info>
@@ -32,12 +35,14 @@
 </message>
 
 
-<message> 
+<message>
+	<user>identidiant utilisateur</user>
 	<type>auth</type> 
 	<status>denied</status> 
 </message>
 
-<message> 
+<message>
+	<user>identidiant utilisateur</user>
 	<type>auth</type> 
 	<status>already authenticated</status> 
 </message>

@@ -52,7 +52,6 @@ public class GestionSocketServeur {
 		
 		//initialisation socket
 		socketserver = new ServerSocket(_port, _nbClientMax);
-		System.out.println("INFORMATION: serveur > lancement du serveur sur le port : "+ socketserver.getLocalPort());
 		
 	}
 	
