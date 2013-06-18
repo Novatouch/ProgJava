@@ -123,11 +123,11 @@ public class TraitementRequete implements Runnable {
 									keepaliveecho.authentificationConstructionKeepaliveEcho(util.getNom(), util.getSessionid(),util.getPush());
 									
 									socketClient.envoyerMessage(keepaliveecho.toString());
-									System.out.println("INFORMATION: serveur > Envoi message echo keepalive");
+									//System.out.println("INFORMATION: serveur > Envoi message echo keepalive");
 									
 									
 									Message keepaliveAnswer = new Message(socketClient.recevoirMessage());
-									System.out.println("INFORMATION: serveur > Reception de la réponse du client keepalive");
+									//System.out.println("INFORMATION: serveur > Reception de la réponse du client keepalive");
 									
 									if(keepaliveAnswer.authentificationVerificationKeepaliveAnswer(util.getNom(), util.getSessionid()) == false){
 										System.out.println("ERROR: serveur > Reception message keepalive incorect");
@@ -173,21 +173,43 @@ public class TraitementRequete implements Runnable {
 		// vérification de la requête 
 		if (_reqClient.synchronisationVerificationRequest() == true){
 			
+			
 			// vérifie que l'utilisateur soit authentifié
 			ListeClientConnecte  list = config.getListe();
 			
 			if(list.rechercherClientSession(_reqClient.getSessionid()) == true)
 			{
+				System.out.println("INFORMATION: serveur > reception requête de synchronisation de l'utilisateur:" + _reqClient.getUser());
+				
 				// recupération des informations dans la base serveur
 				BaseServeur base = config.getBaseServeur();
 				
 				// envoi des informations à l'utilisateur
-				socketClient.envoyerMessage(base.extractionBaseImageBaseUtilisateur(_reqClient.getUser()));
+				String extraction = base.extractionBaseImageBaseUtilisateur(_reqClient.getUser());
+				
+				try {
+					Thread.sleep(500);
+					
+					if (extraction != null){
+						
+						socketClient.envoyerMessage(extraction);
+						System.out.println("INFORMATION: serveur > envoi de l'extraction réalisé");
+					}
+					else
+					{
+						System.out.println("ERROR: serveur > erreur lors de l'extraction des données utilisateur de la base");
+					}
+					
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 			}
 		}
 		else
 		{
-			System.out.println("ERROR: message transmis par le client non conforme");
+			System.out.println("ERROR: message synchronisation transmis par le client non conforme" + _reqClient.toString());
 		}	
 	}
 	
@@ -205,6 +227,10 @@ public class TraitementRequete implements Runnable {
 		    case "synchronisation":
 		    	demandeSynchronisation(reqClient);
 		        break;
+		        
+		    default:
+		    	System.out.println("ERROR: message transmis par le client non conforme, type inconnu: " + reqClient.toString());
+		    	break;
 			}	
 			
 		} catch (MalformedMessage | IOException e) {
