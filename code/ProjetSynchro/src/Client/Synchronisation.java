@@ -23,7 +23,7 @@ public class Synchronisation implements Runnable {
 	String cheminRepertoire = "";
 	String nomUser = "";
 	
-	Synchronisation(ConfigurationClient confClient) {
+	public Synchronisation(ConfigurationClient confClient) {
 		
 		cheminRepertoire = confClient.getRepertoire();
 		nomUser = confClient.getUtilisateur();
@@ -209,6 +209,7 @@ public class Synchronisation implements Runnable {
 		
 		BaseClient baseClient = new BaseClient(cheminRepertoire);
 		baseClient.recupererBases("basetxtClient", "baseXMLClient", "UserName");
+		String cheminBaseXMLServeur = cheminRepertoire + "\\baseXMLServeur";
 		
 		
 		
