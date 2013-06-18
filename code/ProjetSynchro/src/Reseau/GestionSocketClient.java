@@ -98,10 +98,7 @@ public class GestionSocketClient {
 		return in.readLine();
 	}
 	
-	public String recevoirMessageTimeout() throws IOException{
-		
-		return in.readLine();
-	}
+	public 
 	public void fermerSocket() throws IOException{
 		
 		this.socket.close();
