@@ -97,8 +97,7 @@ public class GestionSocketClient {
 		
 		return in.readLine();
 	}
-	
-	public 
+	 
 	public void fermerSocket() throws IOException{
 		
 		this.socket.close();
