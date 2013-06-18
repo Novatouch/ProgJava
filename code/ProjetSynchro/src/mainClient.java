@@ -21,9 +21,9 @@ public class mainClient {
 			// lecture de la configuration dans un fichier
 			config = new ConfigurationClient();
 			
-//			// lancement du thread d'authentification
-//			Thread t = new Thread(new AuthentificationClient(config));
-//			t.start();
+			// lancement du thread d'authentification
+			Thread t = new Thread(new AuthentificationClient(config));
+			t.start();
 			
 			//lancement du thread de synchronisation
 			Thread tSync = new Thread(new Synchronisation(config));

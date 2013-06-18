@@ -212,6 +212,7 @@ public class Synchronisation implements Runnable {
 		
 
 		try {
+			 System.out.println("Sleep Synchro");
 	         Thread.sleep(5*60*10);
 	     } catch (Exception e) {
 	         System.out.println("Got an exception on sleep!");
@@ -229,6 +230,7 @@ public class Synchronisation implements Runnable {
 			gestionSocket.envoyerMessage(msg.toString());
 			
 			String StringXMLServeur = gestionSocket.recevoirMessage();
+			System.out.println("Reception de la baseXML Serveur sous forme de message");
 			
 			try {
 				DocumentBuilder dBuilderServer = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -236,14 +238,16 @@ public class Synchronisation implements Runnable {
 				ByteArrayInputStream stream = new ByteArrayInputStream(StringXMLServeur.getBytes());
 				
 				try {
-					 
+					
+					System.out.println("Transforme le message contenant la base XML en arbre XML");
 					org.w3c.dom.Document docServer = dBuilderServer.parse(stream);
+
 					
 					// pour comprendre l'interêt de la normalisation http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
 					docServer.getDocumentElement().normalize();
 
 	
-		
+					System.out.println("Recuperation base client");
 					BaseClient baseClient = new BaseClient(configClient.getRepertoire());
 					baseClient.recupererBases("basetxtClient", "baseXMLClient", configClient.getUtilisateur());
 					
@@ -323,7 +327,7 @@ public class Synchronisation implements Runnable {
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			System.out.println("INFORMATION : client > connexion serveur échoué");
+			System.out.println("INFORMATION : client > connexion serveur échoué pour la synchronisation");
 			
 			// attente de 5 seconde avant une nouvelle tentative
 			try {
