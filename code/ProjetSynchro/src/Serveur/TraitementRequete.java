@@ -170,8 +170,10 @@ public class TraitementRequete implements Runnable {
 	
 	void demandeSynchronisation(Message _reqClient){
 		
+		
 		// vérification de la requête 
-		if (_reqClient.synchronisationVerificationRequest() == true){
+		if (_reqClient.synchronisationVerificationRequest() == true)
+		{
 			
 			
 			// vérifie que l'utilisateur soit authentifié
@@ -206,6 +208,10 @@ public class TraitementRequete implements Runnable {
 				}
 				
 			}
+			else
+			{
+				System.out.println("ERROR serveur:synchro > client non authentifié ");
+			}
 		}
 		else
 		{
@@ -220,12 +226,16 @@ public class TraitementRequete implements Runnable {
 		try {
 			Message reqClient = new Message(socketClient.recevoirMessage());
 			
+			System.out.println("INFORMATION: serveur:traitement requete > message provenant du client connecté recu :" + reqClient.toString() );
+			
 			switch(reqClient.getType()) {
 		    case "auth":
 		    	authentification(reqClient);
 		        break;
 		    case "synchronisation":
+		    	System.out.println("INFORMATION: serveur:synchro > demande recue");
 		    	demandeSynchronisation(reqClient);
+		    	
 		        break;
 		        
 		    default:

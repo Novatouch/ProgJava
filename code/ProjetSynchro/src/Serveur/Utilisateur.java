@@ -6,7 +6,7 @@ public class Utilisateur {
 	private String sessionid;
 	private String password;
 	private Boolean push;
-	private static int sessionidIncremental = 0;
+	private static int sessionidIncremental = 100;
 	
 	public Utilisateur(String _nom, String _password){
 		

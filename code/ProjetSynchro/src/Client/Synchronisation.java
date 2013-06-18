@@ -42,8 +42,8 @@ public class Synchronisation implements Runnable {
 
 	/* Recherche dans le fichier XML un objet
 	 * @param cheminFichierXML
-	 * @param type de l'objet cherchÈ (fichier/dossier)
-	 * @param path de l'objet cherchÈ
+	 * @param type de l'objet cherchÔøΩ (fichier/dossier)
+	 * @param path de l'objet cherchÔøΩ
 	 */
 	public boolean rechercherDansBaseXML(Document doc, String typeObjRech, String pathObjRech) {
 		
@@ -91,10 +91,10 @@ public class Synchronisation implements Runnable {
 		
 	}
 	
-	/* Recherche dans le fichier XML la date d'un ÈlÈment
+	/* Recherche dans le fichier XML la date d'un ÔøΩlÔøΩment
 	 * @param cheminFichierXML
-	 * @param type de l'ÈlÈment
-	 * @param path de l'ÈlÈment
+	 * @param type de l'ÔøΩlÔøΩment
+	 * @param path de l'ÔøΩlÔøΩment
 	 */
 	public String rechercherDateDansBaseXML(Document doc, String typeObjRech, String pathObjRech) {
 		
@@ -143,7 +143,7 @@ public class Synchronisation implements Runnable {
 	}
 	
 /* Transforme la date en secondes
- * @param date ‡ transformer
+ * @param date ÔøΩ transformer
  */
 	public int transformerDateEnSecondes(String date) {
 		int dateCount = 0;
@@ -187,8 +187,8 @@ public class Synchronisation implements Runnable {
 	}
 	
 	/* Compare les dates, retourne 0 si egales, 1 si dateClient > dateServeur, 2 si dateServeur > date Client
-	 * @param date cÙtÈ client
-	 * @param date cÙtÈ serveur
+	 * @param date cÔøΩtÔøΩ client
+	 * @param date cÔøΩtÔøΩ serveur
 	 */
 	public int comparerDates(String dateClient, String dateServeur) {
 		int retour = 0;
@@ -228,15 +228,29 @@ public class Synchronisation implements Runnable {
 			try {
 				
 				GestionSocketClient gestionSocket = new GestionSocketClient(configClient.getServeurAdresse(), configClient.getServeurPort(),5000);
+				
+				System.out.println("INFORMATION client:synchro > Connexion au serveur reussie");
 				Message msg = new Message();
 				msg.synchronisationConstructionRequest(configClient.getUtilisateur(), configClient.getSessionid());
 				
 				while(configClient.getEstConnecte() != true)  {
 					System.out.println("En Attente de connection");
+					try {
+						Thread.sleep(200);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 				
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				gestionSocket.envoyerMessage(msg.toString());
-				System.out.println("Emission du message toString");
+				System.out.println("INFORMATION client:synchro > emission de la requ√™te de synchronisation effectue");
 				
 				String StringXMLServeur = gestionSocket.recevoirMessage();
 				System.out.println("Reception de la baseXML Serveur sous forme de message");
@@ -280,12 +294,12 @@ public class Synchronisation implements Runnable {
 						 
 								//System.out.println("\nCurrent Element :" + nNode.getNodeName());
 								
-								// Pour chaque ÈlÈment de la base
+								// Pour chaque ÔøΩlÔøΩment de la base
 								if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 						 
 									Element eElement = (Element) nNode;
 									
-									// On recherche si cet ÈlÈment est prÈsent dans la baseXMLServeur
+									// On recherche si cet ÔøΩlÔøΩment est prÔøΩsent dans la baseXMLServeur
 									estDansBase = rechercherDansBaseXML(docServer, eElement.getElementsByTagName("type").item(0).getTextContent(), eElement.getElementsByTagName("path").item(0).getTextContent());
 									
 									if(estDansBase == true) { // si oui on compare les dates
@@ -294,12 +308,12 @@ public class Synchronisation implements Runnable {
 										
 										//si dateClient > dateServeur
 										if (retourDate == 1) {
-											System.out.println("envoyer l'ÈlÈment au serveur depuis le client : " + eElement.getElementsByTagName("path").item(0).getTextContent());
+											System.out.println("envoyer l'ÔøΩlÔøΩment au serveur depuis le client : " + eElement.getElementsByTagName("path").item(0).getTextContent());
 										}
 										
 										//si dateServeur > dateClient
 										else if(retourDate == 2) {
-											System.out.println("envoyer l'ÈlÈment au client depuis le serveur : "  + eElement.getElementsByTagName("path").item(0).getTextContent());
+											System.out.println("envoyer l'ÔøΩlÔøΩment au client depuis le serveur : "  + eElement.getElementsByTagName("path").item(0).getTextContent());
 										}
 										
 										else if(retourDate == 3) {
@@ -308,7 +322,7 @@ public class Synchronisation implements Runnable {
 									}
 									
 									else { // n'est pas dans la base
-										System.out.println("supprimer l'ÈlÈment cÙtÈ serveur : "  + eElement.getElementsByTagName("path").item(0).getTextContent());
+										System.out.println("supprimer l'ÔøΩlÔøΩment cÔøΩtÔøΩ serveur : "  + eElement.getElementsByTagName("path").item(0).getTextContent());
 									}
 					
 									
@@ -331,12 +345,12 @@ public class Synchronisation implements Runnable {
 					
 				} catch (ParserConfigurationException e) {
 					// TODO Auto-generated catch block
-					System.out.println("ERREUR: message > erreur d'initialisation environement xml");
+					System.out.println("ERROR: client:synchro > erreur d'initialisation environement xml");
 				}
 	
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				System.out.println("Erreur : client > connexion serveur √©chou√© pour la synchronisation");
+				System.out.println("ERROR  client:synchro > connexion serveur √©chou√© pour la synchronisation");
 				
 				// attente de 5 seconde avant une nouvelle tentative
 				try {

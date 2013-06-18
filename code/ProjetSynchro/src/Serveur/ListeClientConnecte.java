@@ -1,6 +1,7 @@
 package Serveur;
 
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -43,6 +44,23 @@ public class ListeClientConnecte {
 	
 	public Boolean rechercherClientSession(String _sessionid){
 		
-		return liste.contains(Integer.parseInt(_sessionid));
+		
+Collection<Utilisateur> listeUtilisateur = liste.values();
+		
+		Iterator<Utilisateur> iterator = listeUtilisateur.iterator();
+		
+		while(iterator.hasNext()){
+			
+			Utilisateur util = iterator.next();
+			
+			System.out.println("INFORMATION : client > " +util.getNom() +util.getSessionid());
+			
+			if(util.getSessionid().contentEquals(_sessionid)  ){
+				
+				return true;
+			}
+		}
+		
+		return false;
 	}
 }
