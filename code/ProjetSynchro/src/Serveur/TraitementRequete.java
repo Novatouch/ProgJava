@@ -179,9 +179,10 @@ public class TraitementRequete implements Runnable {
 			if(list.rechercherClientSession(_reqClient.getSessionid()) == true)
 			{
 				// recupération des informations dans la base serveur
-				config.
+				BaseServeur base = config.getBaseServeur();
 				
-				// envoi des informations à l'uilisateur
+				// envoi des informations à l'utilisateur
+				socketClient.envoyerMessage(base.extractionBaseImageBaseUtilisateur(_reqClient.getUser()));
 			}
 		}
 		else
