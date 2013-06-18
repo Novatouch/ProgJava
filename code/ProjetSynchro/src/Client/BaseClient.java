@@ -13,11 +13,11 @@ import org.w3c.dom.NodeList;
 
 
 
-public class Base {
+public class BaseClient {
 	
 	String cheminRepertoire;
 	
-	Base(String cheminRep) {
+	BaseClient(String cheminRep) {
 		cheminRepertoire = cheminRep;
 
 	}
