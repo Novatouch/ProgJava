@@ -225,6 +225,10 @@ public class Synchronisation {
 		String dateServeur = "";
 		int retourDate = 3;
 		
+		
+		Base baseServeur = new Base("C:\\Users\\Melvin\\Documents\\GitHub\\ProgJava\\code\\Repertoire");
+		baseServeur.recupererBases("basetxtClient", "baseXMLClient", "UserName");
+		
 		try {
 			 
 			File fXmlFile = new File(cheminBaseXMLClient);
@@ -284,19 +288,6 @@ public class Synchronisation {
 		
 	}
 	
-	public static void main(String argv[]) {
-		
-		Synchronisation sync = new Synchronisation("C:\\Users\\Melvin\\Documents\\GitHub\\ProgJava\\code\\ProjetSynchro\\baseXMLClient");
-		
-		Base baseServeur = new Base("C:\\Users\\Melvin\\Documents\\GitHub\\ProgJava\\code\\Repertoire");
-		baseServeur.recupererBases("basetxtClient", "baseXMLClient", "UserName");
-		
-//		Base baseClient = new Base("D:\\Save\\workspace\\TestBase");
-//		baseClient.recupererBases("basetxtServeur", "baseXMLServeur", "Melvin");
-		
-//		System.out.println("SyncClient :");
-//		sync.run();
 
-	}
 
 }
