@@ -3,6 +3,7 @@ import java.io.IOException;
 import Client.AuthentificationClient;
 import Client.ConfigurationClient;
 import Client.MissedParametersExeption;
+import Client.Synchronisation;
 
 
 public class mainClient {
@@ -23,6 +24,10 @@ public class mainClient {
 			// lancement du thread d'authentification
 			Thread t = new Thread(new AuthentificationClient(config));
 			t.start();
+			
+			//lancement du thread de synchronisation
+			Thread tSync = new Thread(new Synchronisation(config));
+			tSync.start();
 			
 			
 		} catch (IOException e) {

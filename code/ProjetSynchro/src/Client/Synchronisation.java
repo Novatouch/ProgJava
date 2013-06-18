@@ -20,33 +20,82 @@ import org.w3c.dom.NodeList;
  */
 public class Synchronisation {
 	
-	String cheminBaseXMLClient = "";
-	String cheminBaseXMLServeur = "";
+	String cheminRepertoire = "";
+	String nomUser = "";
 	
-	Synchronisation(String cheminBaseClient) {
-		cheminBaseXMLClient = cheminBaseClient;
+	Synchronisation(ConfigurationClient confClient) {
+		
+		cheminRepertoire = confClient.getRepertoire();
+		nomUser = confClient.getUtilisateur();
+		
+		boolean estDansBase = false;
+		String dateServeur = "";
+		int retourDate = 3;
+		
+		
+		Base baseClient = new Base(cheminRepertoire);
+		baseClient.recupererBases("basetxtClient", "baseXMLClient", "UserName");
+		
+		try {
+			 
+			File fXmlFile = new File(cheminRepertoire + "\\baseXMLClient");
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(fXmlFile);
+			
+			doc.getDocumentElement().normalize();
+		 
+			NodeList nList = doc.getElementsByTagName("data");
+		 
+			for (int temp = 0; temp < nList.getLength(); temp++) {
+		 
+				Node nNode = nList.item(temp);
+		 
+				//System.out.println("\nCurrent Element :" + nNode.getNodeName());
+				
+				// Pour chaque élément de la base
+				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+		 
+					Element eElement = (Element) nNode;
+					
+					// On recherche si cet élément est présent dans la baseXMLServeur
+					estDansBase = rechercherDansBaseXML(cheminBaseXMLServeur, eElement.getElementsByTagName("type").item(0).getTextContent(), eElement.getElementsByTagName("path").item(0).getTextContent());
+					
+					if(estDansBase == true) { // si oui on compare les dates
+						dateServeur = rechercherDateDansBaseXML(cheminBaseXMLServeur,  eElement.getElementsByTagName("type").item(0).getTextContent(), eElement.getElementsByTagName("path").item(0).getTextContent());
+						retourDate = comparerDates(eElement.getElementsByTagName("date").item(0).getTextContent(),dateServeur);
+						
+						//si dateClient > dateServeur
+						if (retourDate == 1) {
+							System.out.println("envoyer l'élément au serveur depuis le client : " + eElement.getElementsByTagName("path").item(0).getTextContent());
+						}
+						
+						//si dateServeur > dateClient
+						else if(retourDate == 2) {
+							System.out.println("envoyer l'élément au client depuis le serveur : "  + eElement.getElementsByTagName("path").item(0).getTextContent());
+						}
+						
+						else if(retourDate == 3) {
+							System.out.println("Erreur : comparaison de dates : "  + eElement.getElementsByTagName("path").item(0).getTextContent());
+						}
+					}
+					
+					else { // n'est pas dans la base
+						System.out.println("supprimer l'élément côté serveur : "  + eElement.getElementsByTagName("path").item(0).getTextContent());
+					}
 
+					
+				}
+		 
+			}
+
+	    } catch (Exception e) {
+		e.printStackTrace();
+	    }
+		
 	}
-
 	
-	public String getCheminBaseXMLClient() {
-		return cheminBaseXMLClient;
-	}
 
-
-	public void setCheminBaseXMLClient(String cheminBaseXMLClient) {
-		this.cheminBaseXMLClient = cheminBaseXMLClient;
-	}
-
-
-	public String getCheminBaseXMLServeur() {
-		return cheminBaseXMLServeur;
-	}
-
-
-	public void setCheminBaseXMLServeur(String cheminBaseXMLServeur) {
-		this.cheminBaseXMLServeur = cheminBaseXMLServeur;
-	}
 
 	/* Recherche dans le fichier XML un objet
 	 * @param cheminFichierXML
@@ -215,79 +264,5 @@ public class Synchronisation {
 		
 		return(retour);
 	}
-	
-	/* Synchronisation côté client
-	 * 
-	 */
-	public void run() {
-		
-		boolean estDansBase = false;
-		String dateServeur = "";
-		int retourDate = 3;
-		
-		
-		Base baseServeur = new Base("C:\\Users\\Melvin\\Documents\\GitHub\\ProgJava\\code\\Repertoire");
-		baseServeur.recupererBases("basetxtClient", "baseXMLClient", "UserName");
-		
-		try {
-			 
-			File fXmlFile = new File(cheminBaseXMLClient);
-			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			Document doc = dBuilder.parse(fXmlFile);
-			
-			doc.getDocumentElement().normalize();
-		 
-			NodeList nList = doc.getElementsByTagName("data");
-		 
-			for (int temp = 0; temp < nList.getLength(); temp++) {
-		 
-				Node nNode = nList.item(temp);
-		 
-				//System.out.println("\nCurrent Element :" + nNode.getNodeName());
-				
-				// Pour chaque élément de la base
-				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-		 
-					Element eElement = (Element) nNode;
-					
-					// On recherche si cet élément est présent dans la baseXMLServeur
-					estDansBase = rechercherDansBaseXML(cheminBaseXMLServeur, eElement.getElementsByTagName("type").item(0).getTextContent(), eElement.getElementsByTagName("path").item(0).getTextContent());
-					
-					if(estDansBase == true) { // si oui on compare les dates
-						dateServeur = rechercherDateDansBaseXML(cheminBaseXMLServeur,  eElement.getElementsByTagName("type").item(0).getTextContent(), eElement.getElementsByTagName("path").item(0).getTextContent());
-						retourDate = comparerDates(eElement.getElementsByTagName("date").item(0).getTextContent(),dateServeur);
-						
-						//si dateClient > dateServeur
-						if (retourDate == 1) {
-							System.out.println("envoyer l'élément au serveur depuis le client : " + eElement.getElementsByTagName("path").item(0).getTextContent());
-						}
-						
-						//si dateServeur > dateClient
-						else if(retourDate == 2) {
-							System.out.println("envoyer l'élément au client depuis le serveur : "  + eElement.getElementsByTagName("path").item(0).getTextContent());
-						}
-						
-						else if(retourDate == 3) {
-							System.out.println("Erreur : comparaison de dates : "  + eElement.getElementsByTagName("path").item(0).getTextContent());
-						}
-					}
-					
-					else { // n'est pas dans la base
-						System.out.println("supprimer l'élément côté serveur : "  + eElement.getElementsByTagName("path").item(0).getTextContent());
-					}
-
-					
-				}
-		 
-			}
-
-	    } catch (Exception e) {
-		e.printStackTrace();
-	    }
-		
-	}
-	
 
 
-}

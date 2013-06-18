@@ -46,12 +46,13 @@ public class ConfigurationClient {
 		utilisateur = "not defined";
 		sessionid = null;
 		portServeur = 0;
-		repertoire = "not defined";
+		repertoire = System.getProperty("user.dir");
 		serveurAdresse = "not defined";
 		motDePasse = "not defined";
 		faireSynchronisation = true;
 		estConnecte = false;
 		dateDerniereSynchronisation = new Date();
+	
 		// ouverture du fichier contenant la configuration du client
 		String ligne;
         String fichier = System.getProperty("user.dir") + "/"+ "config-client.conf";
@@ -82,7 +83,8 @@ public class ConfigurationClient {
             } else if (tokens[0].contains("motDePasse")){
             	
             	motDePasse = tokens[1];
-            }
+            
+        	}
             
         }
         br.close();
