@@ -1,15 +1,23 @@
 package Client;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.Date;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
+import Reseau.GestionSocketClient;
+import Reseau.MalformedMessage;
+import Reseau.Message;
 
 /**
  * 
@@ -21,15 +29,12 @@ import org.w3c.dom.NodeList;
  */
 public class Synchronisation implements Runnable {
 	
-	String cheminRepertoire = "";
-	String nomUser = "";
-	String userDir = "";
+
+	private ConfigurationClient configClient;
 	
 	public Synchronisation(ConfigurationClient confClient) {
 		
-		cheminRepertoire = confClient.getRepertoire();
-		nomUser = confClient.getUtilisateur();
-		userDir = confClient.getUserDir();
+		configClient = confClient;
 		
 	}
 	
@@ -40,16 +45,16 @@ public class Synchronisation implements Runnable {
 	 * @param type de l'objet cherché (fichier/dossier)
 	 * @param path de l'objet cherché
 	 */
-	public boolean rechercherDansBaseXML(String cheminBase, String typeObjRech, String pathObjRech) {
+	public boolean rechercherDansBaseXML(Document doc, String typeObjRech, String pathObjRech) {
 		
 		boolean bool = false;
 		
 		try {
 			 
-			File fXmlFile = new File(cheminBase);
-			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			Document doc = dBuilder.parse(fXmlFile);
+//			File fXmlFile = new File(cheminBase);
+//			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+//			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+//			Document doc = dBuilder.parse(fXmlFile);
 			
 			doc.getDocumentElement().normalize();
 		 
@@ -91,16 +96,16 @@ public class Synchronisation implements Runnable {
 	 * @param type de l'élément
 	 * @param path de l'élément
 	 */
-	public String rechercherDateDansBaseXML(String cheminBase, String typeObjRech, String pathObjRech) {
+	public String rechercherDateDansBaseXML(Document doc, String typeObjRech, String pathObjRech) {
 		
 		String date = "";
 		
 		try {
 			 
-			File fXmlFile = new File(cheminBase);
-			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			Document doc = dBuilder.parse(fXmlFile);
+//			File fXmlFile = new File(cheminBase);
+//			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+//			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+//			Document doc = dBuilder.parse(fXmlFile);
 			
 			doc.getDocumentElement().normalize();
 		 
@@ -217,72 +222,117 @@ public class Synchronisation implements Runnable {
 		String dateServeur = "";
 		int retourDate = 3;
 		
-		
-		BaseClient baseClient = new BaseClient(cheminRepertoire);
-		baseClient.recupererBases("basetxtClient", "baseXMLClient", nomUser);
-		String cheminBaseXMLServeur = userDir + "\\baseXMLServeur";
-			
-			
-			
-			
 		try {
-			 
-			File fXmlFile = new File(userDir + "\\baseXMLClient");
-			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			Document doc = dBuilder.parse(fXmlFile);
+			GestionSocketClient gestionSocket = new GestionSocketClient(configClient.getServeurAdresse(), configClient.getServeurPort(),5000);
+			Message msg = new Message();
+			msg.synchronisationConstructionRequest(configClient.getUtilisateur(), configClient.getSessionid());
+			gestionSocket.envoyerMessage(msg.toString());
 			
-			doc.getDocumentElement().normalize();
-		 
-			NodeList nList = doc.getElementsByTagName("data");
-		 
-			for (int temp = 0; temp < nList.getLength(); temp++) {
-		 
-				Node nNode = nList.item(temp);
-		 
-				//System.out.println("\nCurrent Element :" + nNode.getNodeName());
+			String StringXMLServeur = gestionSocket.recevoirMessage();
+			
+			try {
+				DocumentBuilder dBuilderServer = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 				
-				// Pour chaque élément de la base
-				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-		 
-					Element eElement = (Element) nNode;
+				ByteArrayInputStream stream = new ByteArrayInputStream(StringXMLServeur.getBytes());
+				
+				try {
+					 
+					org.w3c.dom.Document docServer = dBuilderServer.parse(stream);
 					
-					// On recherche si cet élément est présent dans la baseXMLServeur
-					estDansBase = rechercherDansBaseXML(cheminBaseXMLServeur, eElement.getElementsByTagName("type").item(0).getTextContent(), eElement.getElementsByTagName("path").item(0).getTextContent());
-					
-					if(estDansBase == true) { // si oui on compare les dates
-						dateServeur = rechercherDateDansBaseXML(cheminBaseXMLServeur,  eElement.getElementsByTagName("type").item(0).getTextContent(), eElement.getElementsByTagName("path").item(0).getTextContent());
-						retourDate = comparerDates(eElement.getElementsByTagName("date").item(0).getTextContent(),dateServeur);
-						
-						//si dateClient > dateServeur
-						if (retourDate == 1) {
-							System.out.println("envoyer l'élément au serveur depuis le client : " + eElement.getElementsByTagName("path").item(0).getTextContent());
-						}
-						
-						//si dateServeur > dateClient
-						else if(retourDate == 2) {
-							System.out.println("envoyer l'élément au client depuis le serveur : "  + eElement.getElementsByTagName("path").item(0).getTextContent());
-						}
-						
-						else if(retourDate == 3) {
-							System.out.println("Erreur : comparaison de dates : "  + eElement.getElementsByTagName("path").item(0).getTextContent());
-						}
-					}
-					
-					else { // n'est pas dans la base
-						System.out.println("supprimer l'élément côté serveur : "  + eElement.getElementsByTagName("path").item(0).getTextContent());
-					}
+					// pour comprendre l'interÃªt de la normalisation http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+					docServer.getDocumentElement().normalize();
+
 	
+		
+					BaseClient baseClient = new BaseClient(configClient.getRepertoire());
+					baseClient.recupererBases("basetxtClient", "baseXMLClient", configClient.getUtilisateur());
 					
+					
+					
+						
+					try {
+						 
+						File fXmlFile = new File(configClient.getUserDir() + "\\baseXMLClient");
+						DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+						DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+						Document doc = dBuilder.parse(fXmlFile);
+						
+						doc.getDocumentElement().normalize();
+					 
+						NodeList nList = doc.getElementsByTagName("data");
+					 
+						for (int temp = 0; temp < nList.getLength(); temp++) {
+					 
+							Node nNode = nList.item(temp);
+					 
+							//System.out.println("\nCurrent Element :" + nNode.getNodeName());
+							
+							// Pour chaque élément de la base
+							if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+					 
+								Element eElement = (Element) nNode;
+								
+								// On recherche si cet élément est présent dans la baseXMLServeur
+								estDansBase = rechercherDansBaseXML(docServer, eElement.getElementsByTagName("type").item(0).getTextContent(), eElement.getElementsByTagName("path").item(0).getTextContent());
+								
+								if(estDansBase == true) { // si oui on compare les dates
+									dateServeur = rechercherDateDansBaseXML(docServer,  eElement.getElementsByTagName("type").item(0).getTextContent(), eElement.getElementsByTagName("path").item(0).getTextContent());
+									retourDate = comparerDates(eElement.getElementsByTagName("date").item(0).getTextContent(),dateServeur);
+									
+									//si dateClient > dateServeur
+									if (retourDate == 1) {
+										System.out.println("envoyer l'élément au serveur depuis le client : " + eElement.getElementsByTagName("path").item(0).getTextContent());
+									}
+									
+									//si dateServeur > dateClient
+									else if(retourDate == 2) {
+										System.out.println("envoyer l'élément au client depuis le serveur : "  + eElement.getElementsByTagName("path").item(0).getTextContent());
+									}
+									
+									else if(retourDate == 3) {
+										System.out.println("Erreur : comparaison de dates : "  + eElement.getElementsByTagName("path").item(0).getTextContent());
+									}
+								}
+								
+								else { // n'est pas dans la base
+									System.out.println("supprimer l'élément côté serveur : "  + eElement.getElementsByTagName("path").item(0).getTextContent());
+								}
+				
+								
+							}
+					 
+						}
+				
+				    } catch (Exception e) {
+					e.printStackTrace();
+				    }
+					
+				} catch (SAXException e) {
+					// TODO Auto-generated catch block
+					System.out.println("ERREUR: message > requÃªte non conforme xml");
+					
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-		 
+				
+			} catch (ParserConfigurationException e) {
+				// TODO Auto-generated catch block
+				System.out.println("ERREUR: message > erreur d'initialisation environement xml");
 			}
-	
-	    } catch (Exception e) {
-		e.printStackTrace();
-	    }
 
-
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			System.out.println("INFORMATION : client > connexion serveur Ã©chouÃ©");
+			
+			// attente de 5 seconde avant une nouvelle tentative
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
 		
 	}
 }

@@ -10,12 +10,18 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+/**
+ * 
+ */
 
-
+/**
+ * @author Melvin
+ *
+ */
 
 public class BaseClient {
 	
-	String cheminRepertoire;
+	private String cheminRepertoire;
 	
 	BaseClient(String cheminRep) {
 		cheminRepertoire = cheminRep;
