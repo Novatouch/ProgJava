@@ -21,9 +21,9 @@ public class Synchronisation {
 	String cheminBaseXMLClient = "";
 	String cheminBaseXMLServeur = "";
 	
-	Synchronisation(String cheminBaseClient, String cheminBaseServeur) {
+	Synchronisation(String cheminBaseClient) {
 		cheminBaseXMLClient = cheminBaseClient;
-		cheminBaseXMLServeur = cheminBaseServeur;
+
 	}
 
 	
@@ -217,7 +217,7 @@ public class Synchronisation {
 	/* Synchronisation côté client
 	 * 
 	 */
-	public void synchronisationClient() {
+	public void run() {
 		
 		boolean estDansBase = false;
 		String dateServeur = "";
@@ -282,86 +282,18 @@ public class Synchronisation {
 		
 	}
 	
-	/* Synchronisation côté serveur
-	 * 
-	 */
-	public void synchronisationServeur() {
-		
-		boolean estDansBase = false;
-		String dateClient = "";
-		int retourDate = 3;
-		
-		try {
-			 
-			File fXmlFile = new File(cheminBaseXMLServeur);
-			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			Document doc = dBuilder.parse(fXmlFile);
-			
-			doc.getDocumentElement().normalize();
-		 
-			NodeList nList = doc.getElementsByTagName("data");
-		 
-			for (int temp = 0; temp < nList.getLength(); temp++) {
-		 
-				Node nNode = nList.item(temp);
-		 
-				//System.out.println("\nCurrent Element :" + nNode.getNodeName());
-				
-				// Pour chaque élément de la base
-				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-		 
-					Element eElement = (Element) nNode;
-					
-					// On recherche si cet élément est présent dans la baseXMLServeur
-					estDansBase = rechercherDansBaseXML(cheminBaseXMLClient, eElement.getElementsByTagName("type").item(0).getTextContent(), eElement.getElementsByTagName("path").item(0).getTextContent());
-					
-					if(estDansBase == true) { // si oui on compare les dates
-						dateClient = rechercherDateDansBaseXML(cheminBaseXMLClient,  eElement.getElementsByTagName("type").item(0).getTextContent(), eElement.getElementsByTagName("path").item(0).getTextContent());
-						retourDate = comparerDates(dateClient,eElement.getElementsByTagName("date").item(0).getTextContent());
-						
-						//si dateClient > dateServeur
-						if (retourDate == 1) {
-							System.out.println("envoyer l'élément au serveur depuis le client : " + eElement.getElementsByTagName("path").item(0).getTextContent());
-						}
-						
-						//si dateServeur > dateClient
-						else if(retourDate == 2) {
-							System.out.println("envoyer l'élément au client depuis le serveur : " + eElement.getElementsByTagName("path").item(0).getTextContent());
-						}
-						
-						else if(retourDate == 3) {
-							System.out.println("Erreur : comparaison de dates : " + eElement.getElementsByTagName("path").item(0).getTextContent());
-						}
-					}
-					
-					else { // n'est pas dans la base
-						System.out.println("supprimer l'élément côté client : ");
-					}
-
-					
-				}
-		 
-			}
-
-	    } catch (Exception e) {
-		e.printStackTrace();
-	    }
-		
-	}
-	
 	public static void main(String argv[]) {
 		
-		Synchronisation sync = new Synchronisation("D:\\Save\\workspace\\List\\baseXMLClient","D:\\Save\\workspace\\List\\baseXMLServeur");
+		Synchronisation sync = new Synchronisation("C:\\Users\\Melvin\\Documents\\GitHub\\ProgJava\\code\\ProjetSynchro\\baseXMLClient");
 		
-//		BaseServeur baseServeur = new BaseServeur("D:\\Save\\workspace\\TestBase");
-//		baseServeur.recupererBases("basetxtClient", "baseXMLClient", "Melvin");
-//		
-//		BaseServeur baseClient = new BaseServeur("D:\\Save\\workspace\\TestBase");
+		Base baseServeur = new Base("C:\\Users\\Melvin\\Documents\\GitHub\\ProgJava\\code\\Repertoire");
+		baseServeur.recupererBases("basetxtClient", "baseXMLClient", "UserName");
+		
+//		Base baseClient = new Base("D:\\Save\\workspace\\TestBase");
 //		baseClient.recupererBases("basetxtServeur", "baseXMLServeur", "Melvin");
 		
-		System.out.println("SyncClient :");
-		sync.synchronisationClient();
+//		System.out.println("SyncClient :");
+//		sync.run();
 
 	}
 

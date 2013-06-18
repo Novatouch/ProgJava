@@ -50,6 +50,7 @@ import org.w3c.dom.Element;
 					e.printStackTrace();
 				}
 	        }
+
 	        this.cheminInit = chemin;
 	        this.cheminRecursif = sousDossier;
 	        this.nomBase = nomBase;
@@ -84,8 +85,12 @@ import org.w3c.dom.Element;
 	                	SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss"); // convertir long->date
 	                	octets = files[i].length();
 	                	
+	                	//Transformer le chemin absolu en chemin relatif
+	                	String s= files[i].getAbsolutePath();
+	                	String str[]=s.split("Repertoire",2);
+	                	
 	                	// Affichage des caractéristiques du Dossier dans la console
-	                	chaine = "Dossier  : " + files[i].getAbsolutePath() + " " + sdf.format(dateModification) + " " + octets + System.getProperty("line.separator");
+	                	chaine = "Dossier  : " + str[1] + " " + sdf.format(dateModification) + " " + octets + System.getProperty("line.separator");
 	                    System.out.println(chaine);
 	                    
 	                    // Ecriture dans la base
@@ -98,8 +103,12 @@ import org.w3c.dom.Element;
 	                	SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss"); // convertir long->date
 	                	octets = files[i].length();
 	                	
+	                	//Transformer le chemin absolu en chemin relatif
+	                	String s1= files[i].getAbsolutePath();
+	                	String str1[]=s1.split("Repertoire",2);
+	                	
 	                	// Affichage des caractéristiques du Fichier dans la console
-	                	chaine = "Fichier  : " + files[i].getAbsolutePath() + " " + sdf.format(dateModification) + " " + octets + System.getProperty("line.separator");
+	                	chaine = "Fichier  : " + str1[1] + " " + sdf.format(dateModification) + " " + octets + System.getProperty("line.separator");
 	                    System.out.println(chaine);
 	                    
 	                    // Ecriture dans la base

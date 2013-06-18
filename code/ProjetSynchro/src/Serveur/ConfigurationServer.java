@@ -12,6 +12,7 @@ public class ConfigurationServer {
 	private String repertoire;
 	private ListeClientConnecte liste;
 	private Integer nbClientMax;
+	private BaseServeur base;
 
 	// constructeur récupérant information dans un fichier de configuration
 	public ConfigurationServer() throws IOException, MissedParametersServerExeption  {
@@ -21,6 +22,10 @@ public class ConfigurationServer {
 			repertoire = "stockage";
 			nbClientMax = 5;
 			liste = new ListeClientConnecte();
+			
+			String chemin = System.getProperty("user.dir") + "serverUtilisateur.xml";
+			
+			base = new BaseServeur(chemin);
 			
 			// ouverture du fichier contenant la configuration du client
 			String ligne;
@@ -74,6 +79,10 @@ public class ConfigurationServer {
 		
 		public Integer getNbClientMax(){
 			return nbClientMax;
+		}
+		
+		public BaseServeur getBaseServeur(){
+			return base;
 		}
 		
 }
