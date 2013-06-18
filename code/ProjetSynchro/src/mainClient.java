@@ -24,7 +24,12 @@ public class mainClient {
 			// lancement du thread d'authentification
 			Thread t = new Thread(new AuthentificationClient(config));
 			t.start();
-			
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			//lancement du thread de synchronisation
 			Thread tSync = new Thread(new Synchronisation(config));
 			tSync.start();

@@ -210,134 +210,143 @@ public class Synchronisation implements Runnable {
 	
 	public void run() {
 		
-
-		try {
-			 System.out.println("Sleep Synchro");
-	         Thread.sleep(5*60*10);
-	     } catch (Exception e) {
-	         System.out.println("Got an exception on sleep!");
-	     }
-
-	
-		boolean estDansBase = false;
-		String dateServeur = "";
-		int retourDate = 3;
-		
-		try {
-			GestionSocketClient gestionSocket = new GestionSocketClient(configClient.getServeurAdresse(), configClient.getServeurPort(),5000);
-			Message msg = new Message();
-			msg.synchronisationConstructionRequest(configClient.getUtilisateur(), configClient.getSessionid());
-			gestionSocket.envoyerMessage(msg.toString());
+		while(true) {
 			
-			String StringXMLServeur = gestionSocket.recevoirMessage();
-			System.out.println("Reception de la baseXML Serveur sous forme de message");
 			
 			try {
-				DocumentBuilder dBuilderServer = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-				
-				ByteArrayInputStream stream = new ByteArrayInputStream(StringXMLServeur.getBytes());
-				
-				try {
-					
-					System.out.println("Transforme le message contenant la base XML en arbre XML");
-					org.w3c.dom.Document docServer = dBuilderServer.parse(stream);
-
-					
-					// pour comprendre l'interÃªt de la normalisation http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
-					docServer.getDocumentElement().normalize();
-
+				 System.out.println("Sleep Synchro");
+		         Thread.sleep(5*60*10);
+		     } catch (Exception e) {
+		         System.out.println("Got an exception on sleep!");
+		     }
 	
-					System.out.println("Recuperation base client");
-					BaseClient baseClient = new BaseClient(configClient.getRepertoire());
-					baseClient.recupererBases("basetxtClient", "baseXMLClient", configClient.getUtilisateur());
-					
-					
-					
-						
-					try {
-						 
-						File fXmlFile = new File(configClient.getUserDir() + "\\baseXMLClient");
-						DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-						DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-						Document doc = dBuilder.parse(fXmlFile);
-						
-						doc.getDocumentElement().normalize();
-					 
-						NodeList nList = doc.getElementsByTagName("data");
-					 
-						for (int temp = 0; temp < nList.getLength(); temp++) {
-					 
-							Node nNode = nList.item(temp);
-					 
-							//System.out.println("\nCurrent Element :" + nNode.getNodeName());
-							
-							// Pour chaque élément de la base
-							if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-					 
-								Element eElement = (Element) nNode;
-								
-								// On recherche si cet élément est présent dans la baseXMLServeur
-								estDansBase = rechercherDansBaseXML(docServer, eElement.getElementsByTagName("type").item(0).getTextContent(), eElement.getElementsByTagName("path").item(0).getTextContent());
-								
-								if(estDansBase == true) { // si oui on compare les dates
-									dateServeur = rechercherDateDansBaseXML(docServer,  eElement.getElementsByTagName("type").item(0).getTextContent(), eElement.getElementsByTagName("path").item(0).getTextContent());
-									retourDate = comparerDates(eElement.getElementsByTagName("date").item(0).getTextContent(),dateServeur);
-									
-									//si dateClient > dateServeur
-									if (retourDate == 1) {
-										System.out.println("envoyer l'élément au serveur depuis le client : " + eElement.getElementsByTagName("path").item(0).getTextContent());
-									}
-									
-									//si dateServeur > dateClient
-									else if(retourDate == 2) {
-										System.out.println("envoyer l'élément au client depuis le serveur : "  + eElement.getElementsByTagName("path").item(0).getTextContent());
-									}
-									
-									else if(retourDate == 3) {
-										System.out.println("Erreur : comparaison de dates : "  + eElement.getElementsByTagName("path").item(0).getTextContent());
-									}
-								}
-								
-								else { // n'est pas dans la base
-									System.out.println("supprimer l'élément côté serveur : "  + eElement.getElementsByTagName("path").item(0).getTextContent());
-								}
+		
+			boolean estDansBase = false;
+			String dateServeur = "";
+			int retourDate = 3;
+			
+			try {
 				
-								
-							}
-					 
-						}
+				GestionSocketClient gestionSocket = new GestionSocketClient(configClient.getServeurAdresse(), configClient.getServeurPort(),5000);
+				Message msg = new Message();
+				msg.synchronisationConstructionRequest(configClient.getUtilisateur(), configClient.getSessionid());
 				
-				    } catch (Exception e) {
-					e.printStackTrace();
-				    }
-					
-				} catch (SAXException e) {
-					// TODO Auto-generated catch block
-					System.out.println("ERREUR: message > requÃªte non conforme xml");
-					
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				while(configClient.getEstConnecte() != true)  {
+					System.out.println("En Attente de connection");
 				}
 				
-			} catch (ParserConfigurationException e) {
+				gestionSocket.envoyerMessage(msg.toString());
+				System.out.println("Emission du message toString");
+				
+				String StringXMLServeur = gestionSocket.recevoirMessage();
+				System.out.println("Reception de la baseXML Serveur sous forme de message");
+				
+				try {
+					DocumentBuilder dBuilderServer = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+					
+					ByteArrayInputStream stream = new ByteArrayInputStream(StringXMLServeur.getBytes());
+					
+					try {
+						
+						System.out.println("Transforme le message contenant la base XML en arbre XML");
+						org.w3c.dom.Document docServer = dBuilderServer.parse(stream);
+	
+						
+						// pour comprendre l'interÃªt de la normalisation http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+						docServer.getDocumentElement().normalize();
+	
+		
+						System.out.println("Recuperation base client");
+						BaseClient baseClient = new BaseClient(configClient.getRepertoire());
+						baseClient.recupererBases("basetxtClient", "baseXMLClient", configClient.getUtilisateur());
+						
+						
+						
+							
+						try {
+							 
+							File fXmlFile = new File(configClient.getUserDir() + "\\baseXMLClient");
+							DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+							DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+							Document doc = dBuilder.parse(fXmlFile);
+							
+							doc.getDocumentElement().normalize();
+						 
+							NodeList nList = doc.getElementsByTagName("data");
+						 
+							for (int temp = 0; temp < nList.getLength(); temp++) {
+						 
+								Node nNode = nList.item(temp);
+						 
+								//System.out.println("\nCurrent Element :" + nNode.getNodeName());
+								
+								// Pour chaque élément de la base
+								if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+						 
+									Element eElement = (Element) nNode;
+									
+									// On recherche si cet élément est présent dans la baseXMLServeur
+									estDansBase = rechercherDansBaseXML(docServer, eElement.getElementsByTagName("type").item(0).getTextContent(), eElement.getElementsByTagName("path").item(0).getTextContent());
+									
+									if(estDansBase == true) { // si oui on compare les dates
+										dateServeur = rechercherDateDansBaseXML(docServer,  eElement.getElementsByTagName("type").item(0).getTextContent(), eElement.getElementsByTagName("path").item(0).getTextContent());
+										retourDate = comparerDates(eElement.getElementsByTagName("date").item(0).getTextContent(),dateServeur);
+										
+										//si dateClient > dateServeur
+										if (retourDate == 1) {
+											System.out.println("envoyer l'élément au serveur depuis le client : " + eElement.getElementsByTagName("path").item(0).getTextContent());
+										}
+										
+										//si dateServeur > dateClient
+										else if(retourDate == 2) {
+											System.out.println("envoyer l'élément au client depuis le serveur : "  + eElement.getElementsByTagName("path").item(0).getTextContent());
+										}
+										
+										else if(retourDate == 3) {
+											System.out.println("Erreur : comparaison de dates : "  + eElement.getElementsByTagName("path").item(0).getTextContent());
+										}
+									}
+									
+									else { // n'est pas dans la base
+										System.out.println("supprimer l'élément côté serveur : "  + eElement.getElementsByTagName("path").item(0).getTextContent());
+									}
+					
+									
+								}
+						 
+							}
+					
+					    } catch (Exception e) {
+						e.printStackTrace();
+					    }
+						
+					} catch (SAXException e) {
+						// TODO Auto-generated catch block
+						System.out.println("ERREUR: message > requÃªte non conforme xml");
+						
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+				} catch (ParserConfigurationException e) {
+					// TODO Auto-generated catch block
+					System.out.println("ERREUR: message > erreur d'initialisation environement xml");
+				}
+	
+			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				System.out.println("ERREUR: message > erreur d'initialisation environement xml");
-			}
-
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			System.out.println("INFORMATION : client > connexion serveur Ã©chouÃ© pour la synchronisation");
-			
-			// attente de 5 seconde avant une nouvelle tentative
-			try {
-				Thread.sleep(5000);
-			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				System.out.println("Erreur : client > connexion serveur Ã©chouÃ© pour la synchronisation");
+				
+				// attente de 5 seconde avant une nouvelle tentative
+				try {
+					Thread.sleep(5000);
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		}
-		
 	}
 }
 
