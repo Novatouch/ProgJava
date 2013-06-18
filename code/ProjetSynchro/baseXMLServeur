@@ -1,36 +1,36 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <server>
-  <user name="Philippe">
+  <user name="UserName">
     <data>
       <type>Dossier</type>
-      <owner>Philippe</owner>
-      <name>Philippe</name>
+      <owner>UserName</owner>
+      <name>UserName</name>
       <date>06/18/2013 20:40:38</date>
-      <path>\Philippe</path>
+      <path>\UserName</path>
       <size>0</size>
     </data>
     <data>
       <type>Dossier</type>
-      <owner>Philippe</owner>
+      <owner>UserName</owner>
       <name>Dossier1</name>
       <date>06/18/2013 20:40:23</date>
-      <path>\Philippe\Dossier1</path>
+      <path>\UserName\Dossier1</path>
       <size>0</size>
     </data>
     <data>
       <type>Fichier</type>
-      <owner>Philippe</owner>
+      <owner>UserName</owner>
       <name>FichierTexte2.txt</name>
       <date>06/18/2013 20:40:27</date>
-      <path>\Philippe\Dossier1\FichierTexte2.txt</path>
+      <path>\UserName\Dossier1\FichierTexte2.txt</path>
       <size>15005</size>
     </data>
     <data>
       <type>Fichier</type>
-      <owner>Philippe</owner>
+      <owner>UserName</owner>
       <name>FichierTexte1.txt</name>
       <date>06/18/2013 20:39:47</date>
-      <path>\Philippe\FichierTexte1.txt</path>
+      <path>\UserName\FichierTexte1.txt</path>
       <size>151220</size>
     </data>
   </user>

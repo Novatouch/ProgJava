@@ -33,12 +33,12 @@ public class ConfigurationClient {
 	private String utilisateur;
 	private String motDePasse;
 	private String sessionid;
+	private String userDir;
 	private String repertoire;
 	private Boolean estConnecte;
 	private String serveurAdresse;
 	private Integer portServeur;
 	private Boolean faireSynchronisation;
-	private Date dateDerniereSynchronisation;
 	
 	public ConfigurationClient() throws IOException, MissedParametersExeption  {
 		
@@ -46,12 +46,12 @@ public class ConfigurationClient {
 		utilisateur = "not defined";
 		sessionid = null;
 		portServeur = 0;
-		repertoire = System.getProperty("user.dir");
+		userDir = System.getProperty("user.dir");
+		repertoire = userDir + "\\Stockage";
 		serveurAdresse = "not defined";
 		motDePasse = "not defined";
 		faireSynchronisation = true;
 		estConnecte = false;
-		dateDerniereSynchronisation = new Date();
 	
 		// ouverture du fichier contenant la configuration du client
 		String ligne;
@@ -139,5 +139,10 @@ public class ConfigurationClient {
 	public synchronized void setSessionid(String string){
 		sessionid = string;
 	}
+
+	public String getUserDir() {
+		return userDir;
+	}
+	
 }
 	

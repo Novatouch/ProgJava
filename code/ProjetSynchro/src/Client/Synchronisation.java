@@ -1,5 +1,6 @@
 package Client;
 import java.io.File;
+import java.util.Date;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -22,11 +23,13 @@ public class Synchronisation implements Runnable {
 	
 	String cheminRepertoire = "";
 	String nomUser = "";
+	String userDir = "";
 	
 	public Synchronisation(ConfigurationClient confClient) {
 		
 		cheminRepertoire = confClient.getRepertoire();
 		nomUser = confClient.getUtilisateur();
+		userDir = confClient.getUserDir();
 		
 	}
 	
@@ -201,6 +204,14 @@ public class Synchronisation implements Runnable {
 	}
 	
 	public void run() {
+		
+
+		try {
+	         Thread.sleep(5*60*10);
+	     } catch (Exception e) {
+	         System.out.println("Got an exception on sleep!");
+	     }
+
 	
 		boolean estDansBase = false;
 		String dateServeur = "";
@@ -208,14 +219,15 @@ public class Synchronisation implements Runnable {
 		
 		
 		BaseClient baseClient = new BaseClient(cheminRepertoire);
-		baseClient.recupererBases("basetxtClient", "baseXMLClient", "UserName");
-		String cheminBaseXMLServeur = cheminRepertoire + "\\baseXMLServeur";
-		
-		
-		
+		baseClient.recupererBases("basetxtClient", "baseXMLClient", nomUser);
+		String cheminBaseXMLServeur = userDir + "\\baseXMLServeur";
+			
+			
+			
+			
 		try {
 			 
-			File fXmlFile = new File(cheminRepertoire + "\\baseXMLClient");
+			File fXmlFile = new File(userDir + "\\baseXMLClient");
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.parse(fXmlFile);
@@ -269,6 +281,8 @@ public class Synchronisation implements Runnable {
 	    } catch (Exception e) {
 		e.printStackTrace();
 	    }
+
+
 		
 	}
 }

@@ -88,7 +88,7 @@ import org.w3c.dom.Element;
 	                	
 	                	//Transformer le chemin absolu en chemin relatif
 	                	String s= files[i].getAbsolutePath();
-	                	String str[]=s.split("Stockage",2);
+	                	String str[]=s.split("Stockage");
 	                	
 	                	// Affichage des caractéristiques du Dossier dans la console
 	                	chaine = "Dossier  : " + str[1] + " " + sdf.format(dateModification) + " " + octets + System.getProperty("line.separator");
@@ -106,7 +106,8 @@ import org.w3c.dom.Element;
 	                	
 	                	//Transformer le chemin absolu en chemin relatif
 	                	String s1= files[i].getAbsolutePath();
-	                	String str1[]=s1.split("Stockage",2);
+	                	String str1[]=s1.split("Stockage",3);
+	                	System.out.println(str1[1]);
 	                	
 	                	// Affichage des caractéristiques du Fichier dans la console
 	                	chaine = "Fichier  : " + str1[1] + " " + sdf.format(dateModification) + " " + octets + System.getProperty("line.separator");
