@@ -23,7 +23,7 @@ public class ConfigurationServer {
 			nbClientMax = 5;
 			liste = new ListeClientConnecte();
 			
-			String chemin = System.getProperty("user.dir") + "serverUtilisateur.xml";
+			String chemin = System.getProperty("user.dir") + "/serverUtilisateur.xml";
 			
 			base = new BaseServeur(chemin);
 			
