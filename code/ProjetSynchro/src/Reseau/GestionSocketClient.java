@@ -52,7 +52,7 @@ public class GestionSocketClient {
 	private Socket socket;
 	private PrintWriter out;
 	private BufferedReader in;
-	
+	//private ObjectOutputStream outStream;
 	
 	public GestionSocketClient(Socket _socket) throws IOException{
 		
@@ -98,7 +98,7 @@ public class GestionSocketClient {
 		return in.readLine();
 	}
 	
-	public 
+
 	public void fermerSocket() throws IOException{
 		
 		this.socket.close();

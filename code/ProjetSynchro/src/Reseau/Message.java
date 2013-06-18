@@ -397,4 +397,23 @@ public class Message {
 			return false;
 		}
 	}
+	
+	public void synchronisationConstructionRequest(String _user, String _sessionid){
+		type = "synchronisation";
+		user = _user;
+		status = "request";
+		sessionid = _sessionid;
+	}
+	
+	public Boolean synchronisationVerificationRequest(){
+				
+		if (user != null  && sessionid != null && type.contentEquals("synchronisation") && status.contentEquals("request"))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 }
