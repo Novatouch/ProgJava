@@ -18,35 +18,19 @@ import org.w3c.dom.NodeList;
  * @author Melvin
  *
  */
-public class Synchronisation {
+public class Synchronisation implements Runnable {
 	
-	String cheminBaseXMLClient = "";
-	String cheminBaseXMLServeur = "";
+	String cheminRepertoire = "";
+	String nomUser = "";
 	
-	Synchronisation(String cheminBaseClient) {
-		cheminBaseXMLClient = cheminBaseClient;
-
+	public Synchronisation(ConfigurationClient confClient) {
+		
+		cheminRepertoire = confClient.getRepertoire();
+		nomUser = confClient.getUtilisateur();
+		
 	}
-
 	
-	public String getCheminBaseXMLClient() {
-		return cheminBaseXMLClient;
-	}
 
-
-	public void setCheminBaseXMLClient(String cheminBaseXMLClient) {
-		this.cheminBaseXMLClient = cheminBaseXMLClient;
-	}
-
-
-	public String getCheminBaseXMLServeur() {
-		return cheminBaseXMLServeur;
-	}
-
-
-	public void setCheminBaseXMLServeur(String cheminBaseXMLServeur) {
-		this.cheminBaseXMLServeur = cheminBaseXMLServeur;
-	}
 
 	/* Recherche dans le fichier XML un objet
 	 * @param cheminFichierXML
@@ -216,18 +200,22 @@ public class Synchronisation {
 		return(retour);
 	}
 	
-	/* Synchronisation côté client
-	 * 
-	 */
 	public void run() {
-		
+	
 		boolean estDansBase = false;
 		String dateServeur = "";
 		int retourDate = 3;
 		
+		
+		BaseClient baseClient = new BaseClient(cheminRepertoire);
+		baseClient.recupererBases("basetxtClient", "baseXMLClient", "UserName");
+		String cheminBaseXMLServeur = cheminRepertoire + "\\baseXMLServeur";
+		
+		
+		
 		try {
 			 
-			File fXmlFile = new File(cheminBaseXMLClient);
+			File fXmlFile = new File(cheminRepertoire + "\\baseXMLClient");
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.parse(fXmlFile);
@@ -272,31 +260,17 @@ public class Synchronisation {
 					else { // n'est pas dans la base
 						System.out.println("supprimer l'élément côté serveur : "  + eElement.getElementsByTagName("path").item(0).getTextContent());
 					}
-
+	
 					
 				}
 		 
 			}
-
+	
 	    } catch (Exception e) {
 		e.printStackTrace();
 	    }
 		
 	}
-	
-	public static void main(String argv[]) {
-		
-		Synchronisation sync = new Synchronisation("C:\\Users\\Melvin\\Documents\\GitHub\\ProgJava\\code\\ProjetSynchro\\baseXMLClient");
-		
-		Base baseServeur = new Base("C:\\Users\\Melvin\\Documents\\GitHub\\ProgJava\\code\\Repertoire");
-		baseServeur.recupererBases("basetxtClient", "baseXMLClient", "UserName");
-		
-//		Base baseClient = new Base("D:\\Save\\workspace\\TestBase");
-//		baseClient.recupererBases("basetxtServeur", "baseXMLServeur", "Melvin");
-		
-//		System.out.println("SyncClient :");
-//		sync.run();
-
-	}
-
 }
+
+
