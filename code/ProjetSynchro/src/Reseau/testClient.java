@@ -15,10 +15,16 @@ public class testClient {
 		
 		try {
 			client = new GestionSocketClient("127.0.0.1", 6001);
+			System.out.println("Connexion au serveur !");
+			client.envoyerFichier(System.getProperty("user.dir")+"/plopDebut.txt");
 			
-			message = client.recevoirMessage();
 			
-			System.out.println(message);
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 			client.fermerSocket();
 			

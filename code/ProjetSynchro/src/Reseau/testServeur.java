@@ -14,16 +14,24 @@ public class testServeur {
 		
 		try{
 			
-		GestionSocketClient client;
+		GestionSocketClient socketClient;
 		
 		
 		server = new GestionSocketServeur(6001, 20);
 		
-		client = new GestionSocketClient(server.accepterClient());
+		socketClient = new GestionSocketClient(server.accepterClient());
+		System.out.println("Attente fichier du client !");
 		
-		client.envoyerMessage("plop");
+		socketClient.recevoirFichier(System.getProperty("user.dir") + "/plop.txt");
+		System.out.println("Reception fichier client !");
 		
-		client.fermerSocket();
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		socketClient.fermerSocket();
 		
 		server.arreterServeur();
 		}
