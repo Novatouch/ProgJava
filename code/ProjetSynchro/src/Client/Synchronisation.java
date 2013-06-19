@@ -281,10 +281,10 @@ public class Synchronisation implements Runnable {
 						try {
 							String RepXMLClient = configClient.getUserDir() + "\\baseXMLClient";
 							System.out.println("Os : " + configClient.getOs());
-							if(configClient.getOs() == "windows") {
+							if(configClient.getOs().equals("windows")) {
 								RepXMLClient = configClient.getUserDir() + "\\baseXMLClient";
 							}
-							else if(configClient.getOs() == "linux") {
+							else {
 								RepXMLClient = configClient.getUserDir() + "/baseXMLClient";
 							}
 							
