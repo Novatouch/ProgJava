@@ -4,32 +4,32 @@
     <data>
       <type>Dossier</type>
       <owner>Philippe</owner>
-      <name>Philippe</name>
-      <date>06/18/2013 20:40:38</date>
+      <name>\Philippe</name>
+      <date>06/19/2013 01:25:07</date>
       <path>\Philippe</path>
       <size>0</size>
     </data>
     <data>
       <type>Dossier</type>
       <owner>Philippe</owner>
-      <name>Dossier1</name>
-      <date>06/18/2013 20:40:23</date>
+      <name>\Philippe\Dossier1</name>
+      <date>06/19/2013 01:25:07</date>
       <path>\Philippe\Dossier1</path>
       <size>0</size>
     </data>
     <data>
       <type>Fichier</type>
       <owner>Philippe</owner>
-      <name>FichierTexte2.txt</name>
-      <date>06/18/2013 20:40:27</date>
+      <name>\Philippe\Dossier1\FichierTexte2.txt</name>
+      <date>06/19/2013 01:25:07</date>
       <path>\Philippe\Dossier1\FichierTexte2.txt</path>
       <size>15005</size>
     </data>
     <data>
       <type>Fichier</type>
       <owner>Philippe</owner>
-      <name>FichierTexte1.txt</name>
-      <date>06/18/2013 20:39:47</date>
+      <name>\Philippe\FichierTexte1.txt</name>
+      <date>06/19/2013 01:25:07</date>
       <path>\Philippe\FichierTexte1.txt</path>
       <size>151220</size>
     </data>

@@ -39,6 +39,7 @@ public class ConfigurationClient {
 	private String serveurAdresse;
 	private Integer portServeur;
 	private Boolean faireSynchronisation;
+	private String os;
 	
 	public ConfigurationClient() throws IOException, MissedParametersExeption  {
 		
@@ -52,6 +53,7 @@ public class ConfigurationClient {
 		motDePasse = "not defined";
 		faireSynchronisation = true;
 		estConnecte = false;
+		os = "windows";
 	
 		// ouverture du fichier contenant la configuration du client
 		String ligne;
@@ -84,7 +86,11 @@ public class ConfigurationClient {
             	
             	motDePasse = tokens[1];
             
-        	}
+        	} else if (tokens[0].contains("os")){
+            	
+				os = tokens[1];
+				
+            }
             
         }
         br.close();
@@ -142,6 +148,14 @@ public class ConfigurationClient {
 
 	public String getUserDir() {
 		return userDir;
+	}
+
+	public String getOs() {
+		return os;
+	}
+
+	public void setOs(String os) {
+		this.os = os;
 	}
 	
 }

@@ -36,8 +36,9 @@ import org.w3c.dom.Element;
 	    public int cptFichier = 0;
 	    public int cptDossier = 0;
 	    private String nomBase = "";
+	    private String osChoisi;
 
-	    public RecupererBaseEnParcoursArborescence(String chemin, Boolean sousDossier, String nomBase) {
+	    public RecupererBaseEnParcoursArborescence(String chemin, Boolean sousDossier, String nomBase, String os) {
 	        super();
 	        
 	        File file = new File(nomBase);
@@ -55,6 +56,7 @@ import org.w3c.dom.Element;
 	        this.cheminInit = chemin;
 	        this.cheminRecursif = sousDossier;
 	        this.nomBase = nomBase;
+	        this.osChoisi = os;
 	    }
 
 	    /* effectue le parcours en arborescence sur le chemin du repertoire donné
@@ -177,7 +179,9 @@ import org.w3c.dom.Element;
 	    public static void ecrire(String nomFic, String texte) {
 	       
 	        //Mettre le chemin du fichier en string
-	        String adressedufichier = System.getProperty("user.dir") + "/"+ nomFic;
+
+	    	String adressedufichier = System.getProperty("user.dir") + "/"+ nomFic;
+
 	   
 	        try {
 
@@ -326,7 +330,13 @@ import org.w3c.dom.Element;
 		    			pathFound = pathFound.substring(0,pathFound.indexOf(" "));
 		    			
 		    			// Trouver le nom dans le path
-		    			String nameFound = pathFound.substring(pathFound.lastIndexOf("\\")+1,pathFound.lastIndexOf(""));
+		    			String nameFound = "";
+		    			if(osChoisi == "windows") {
+		    				nameFound = pathFound.substring(pathFound.lastIndexOf("\\")+1,pathFound.lastIndexOf(""));
+		    			}
+		    			else {
+		    				nameFound = pathFound.substring(pathFound.lastIndexOf("/")+1,pathFound.lastIndexOf(""));
+		    			}
 		    			
 		    			//mettre la date sous forme de STring
 		    			String dateFound = lineToDate(line);

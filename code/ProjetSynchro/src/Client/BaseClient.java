@@ -22,9 +22,11 @@ import org.w3c.dom.NodeList;
 public class BaseClient {
 	
 	private String cheminRepertoire;
+	private String osChoisi;
 	
-	BaseClient(String cheminRep) {
+	BaseClient(String cheminRep, String os) {
 		cheminRepertoire = cheminRep;
+		osChoisi = os;
 
 	}
 	
@@ -34,7 +36,7 @@ public class BaseClient {
 	 * @param utilisateur de la base
 	 */
 	public void recupererBases(String nomBase, String nomBaseXML, String userConnected) {
-		RecupererBaseEnParcoursArborescence parcoursArborescence = new RecupererBaseEnParcoursArborescence(cheminRepertoire, true, nomBase);
+		RecupererBaseEnParcoursArborescence parcoursArborescence = new RecupererBaseEnParcoursArborescence(cheminRepertoire, true, nomBase, osChoisi);
         // Mettre à jour la base
 
         parcoursArborescence.list();

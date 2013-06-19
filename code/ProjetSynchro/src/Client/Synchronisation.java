@@ -253,7 +253,7 @@ public class Synchronisation implements Runnable {
 				System.out.println("INFORMATION client:synchro > emission de la requête de synchronisation effectue");
 				
 				String StringXMLServeur = gestionSocket.recevoirMessage();
-				System.out.println("Reception de la baseXML Serveur sous forme de message");
+				System.out.println("Reception de la baseXML Serveur sous forme de message : " + StringXMLServeur);
 				
 				try {
 					DocumentBuilder dBuilderServer = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -271,15 +271,23 @@ public class Synchronisation implements Runnable {
 	
 		
 						System.out.println("Recuperation base client");
-						BaseClient baseClient = new BaseClient(configClient.getRepertoire());
+						BaseClient baseClient = new BaseClient(configClient.getRepertoire(), configClient.getOs());
 						baseClient.recupererBases("basetxtClient", "baseXMLClient", configClient.getUtilisateur());
 						
 						
 						
 							
 						try {
-							 
-							File fXmlFile = new File(configClient.getUserDir() + "\\baseXMLClient");
+							String RepXMLClient = configClient.getUserDir() + "\\baseXMLClient";
+							System.out.println("Os : " + configClient.getOs());
+							if(configClient.getOs() == "windows") {
+								RepXMLClient = configClient.getUserDir() + "\\baseXMLClient";
+							}
+							else if(configClient.getOs() == "linux") {
+								RepXMLClient = configClient.getUserDir() + "/baseXMLClient";
+							}
+							
+							File fXmlFile = new File(RepXMLClient);
 							DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 							DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 							Document doc = dBuilder.parse(fXmlFile);
@@ -308,12 +316,12 @@ public class Synchronisation implements Runnable {
 										
 										//si dateClient > dateServeur
 										if (retourDate == 1) {
-											System.out.println("envoyer l'�l�ment au serveur depuis le client : " + eElement.getElementsByTagName("path").item(0).getTextContent());
+											System.out.println("envoyer l'element au serveur depuis le client : " + eElement.getElementsByTagName("path").item(0).getTextContent());
 										}
 										
 										//si dateServeur > dateClient
 										else if(retourDate == 2) {
-											System.out.println("envoyer l'�l�ment au client depuis le serveur : "  + eElement.getElementsByTagName("path").item(0).getTextContent());
+											System.out.println("envoyer l'element au client depuis le serveur : "  + eElement.getElementsByTagName("path").item(0).getTextContent());
 										}
 										
 										else if(retourDate == 3) {
@@ -322,7 +330,7 @@ public class Synchronisation implements Runnable {
 									}
 									
 									else { // n'est pas dans la base
-										System.out.println("supprimer l'�l�ment c�t� serveur : "  + eElement.getElementsByTagName("path").item(0).getTextContent());
+										System.out.println("ajouter l'element au serveur depuis le client : "  + eElement.getElementsByTagName("path").item(0).getTextContent());
 									}
 					
 									
