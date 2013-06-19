@@ -23,22 +23,30 @@ public class ConfigurationServer {
 			repertoire = "stockage";
 			nbClientMax = 5;
 			liste = new ListeClientConnecte();
-			String chemin;
-			os = "windows";
+			String chemin,chemin2;
+			os = System.getProperty("os.name");
 			
-			if(os == "linux") {
-				chemin = System.getProperty("user.dir") + "/serverRepertoire.xml";
+			System.out.println(os);
+			
+			if(os.contentEquals("Linux")) {
+				chemin2 = System.getProperty("user.dir") + "/serverRepertoire.xml";
 			} else {
-				chemin = System.getProperty("user.dir") + "\\serverRepertoire.xml";
+				chemin2 = System.getProperty("user.dir") + "\\serverRepertoire.xml";
 			}
 			
-			base = new BaseServeur(chemin);
+			if(os.contentEquals("Linux")) {
+				chemin = System.getProperty("user.dir") + "/serverUtilisateur.xml";
+			} else {
+				chemin = System.getProperty("user.dir") + "\\serverUtilisateur.xml";
+			}
+			
+			base = new BaseServeur(chemin,chemin2);
 			
 			// ouverture du fichier contenant la configuration du client
 			String ligne;
 			String fichier;
 			
-			if(os == "linux") {
+			if(os.contentEquals("Linux")) {
 				fichier = System.getProperty("user.dir") + "/"+ "config-serveur.conf";
 			} else {
 				fichier = System.getProperty("user.dir") + "\\"+ "config-serveur.conf";

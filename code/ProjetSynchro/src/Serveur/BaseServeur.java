@@ -33,14 +33,15 @@ import org.xml.sax.InputSource;
 public class BaseServeur {
 	
 	private InputSource inputSource1;
+	private InputSource inputSourceBaseRepertoire;
 	private XPath xpath;
 	
-	public BaseServeur(String _chemin){
+	public BaseServeur(String _chemin, String _chemin2){
 		
 		xpath = XPathFactory.newInstance().newXPath();
 		
 		inputSource1 = new InputSource(_chemin);
-
+		inputSourceBaseRepertoire = new InputSource(_chemin2);
 		
 	}
 
@@ -102,7 +103,7 @@ public class BaseServeur {
 		try {
 			
 			// recupÃ©ration partie utilisateur
-			NodeList nodes = (NodeList) xpath.evaluate(expression, inputSource1, XPathConstants.NODESET);
+			NodeList nodes = (NodeList) xpath.evaluate(expression, inputSourceBaseRepertoire, XPathConstants.NODESET);
 			
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder docBuilder;
@@ -158,7 +159,7 @@ public class BaseServeur {
     /* Transforme la base texte en base XML
      * @param chemin de la base texte
      * @param nom de l'utilisateur
-     * @param nom à donner à la base XML créée
+     * @param nom ï¿½ donner ï¿½ la base XML crï¿½ï¿½e
      */
     public void baseToXML(String cheminBase, String nomUser, String nomBaseXML, String osChoisi) {
     	
@@ -211,7 +212,7 @@ public class BaseServeur {
 	    			// savoir si c'est un fichier ou un dossier et le mettre sous forme de String
 	    			String typeFound = line.substring(0, 7);
 	    			
-	    			//connaître la taille et la mettre sous forme de String
+	    			//connaï¿½tre la taille et la mettre sous forme de String
 	    			String sizeFound = lineToSize(line);
 	    			
 	    			
@@ -291,8 +292,8 @@ public class BaseServeur {
   	  }
   	}
     
-    /*Trouve la date dans une chaine de caractère enregistrée dans la base
-     * @param ligne de la base à découper
+    /*Trouve la date dans une chaine de caractï¿½re enregistrï¿½e dans la base
+     * @param ligne de la base ï¿½ dï¿½couper
      */
     public static String lineToDate(String line) {
     	String date = "";
@@ -311,8 +312,8 @@ public class BaseServeur {
     	return(date);
     }
     
-    /*Trouve la taille dans une chaine de caractère enregistrée dans la base
-     * @param ligne de la base à découper
+    /*Trouve la taille dans une chaine de caractï¿½re enregistrï¿½e dans la base
+     * @param ligne de la base ï¿½ dï¿½couper
      */
     public static String lineToSize(String line) {
     	String size = "";
@@ -334,9 +335,9 @@ public class BaseServeur {
     	return(size);
     }
     
-	/* Ecris dans un fichier en mode append (à la fin du fichier en le modifiant)
-	 * @param nom du fichier dans lequel écrire
-	 * @param texte à écrire dans ce fichier
+	/* Ecris dans un fichier en mode append (ï¿½ la fin du fichier en le modifiant)
+	 * @param nom du fichier dans lequel ï¿½crire
+	 * @param texte ï¿½ ï¿½crire dans ce fichier
 	 */
     public static void ecrire(String nomFic, String texte) {
        
