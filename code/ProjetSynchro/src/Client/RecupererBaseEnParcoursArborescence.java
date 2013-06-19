@@ -331,7 +331,7 @@ import org.w3c.dom.Element;
 		    			
 		    			// Trouver le nom dans le path
 		    			String nameFound = "";
-		    			if(osChoisi == "windows") {
+		    			if(osChoisi.equals("windows")) {
 		    				nameFound = pathFound.substring(pathFound.lastIndexOf("\\")+1,pathFound.lastIndexOf(""));
 		    			}
 		    			else {
