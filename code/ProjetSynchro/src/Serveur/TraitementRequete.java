@@ -190,7 +190,7 @@ public class TraitementRequete implements Runnable {
 				String extraction = base.extractionBaseImageBaseUtilisateur(_reqClient.getUser());
 				
 				try {
-					Thread.sleep(5000);
+					Thread.sleep(500);
 					
 					if (extraction != null){
 						
@@ -238,7 +238,7 @@ public class TraitementRequete implements Runnable {
 		    	System.out.println("INFORMATION: serveur:synchro > demande recue");
 		    	demandeSynchronisation(reqClient);
 		    	//RecevoirLigneBaseTxt(); --> ajouter la ligne a la base txt --> convertir la base txt en base xml
-		    	//Envoyer/Recevoir message après comparaison
+		    	//Envoyer/Recevoir message aprï¿½s comparaison
 		    	
 		        break;
 		        

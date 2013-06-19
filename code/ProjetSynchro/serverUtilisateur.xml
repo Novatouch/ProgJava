@@ -4,4 +4,8 @@
 		<name>Philippe</name>
 		<password>pouet</password>
 	</user>
+	<user>
+		<name>Etienne</name>
+		<password>pouet</password>
+	</user>
 </server>

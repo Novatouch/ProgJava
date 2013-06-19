@@ -61,7 +61,7 @@ public class GestionSocketClient {
 	private BufferedReader in;
 	private InputStream is;
 	private BufferedOutputStream outS;
-	//private ObjectOutputStream outStream;
+
 	
 	public GestionSocketClient(Socket _socket) throws IOException{
 		
