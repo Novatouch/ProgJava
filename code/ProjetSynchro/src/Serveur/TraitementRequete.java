@@ -190,7 +190,7 @@ public class TraitementRequete implements Runnable {
 				String extraction = base.extractionBaseImageBaseUtilisateur(_reqClient.getUser());
 				
 				try {
-					Thread.sleep(500);
+					Thread.sleep(5000);
 					
 					if (extraction != null){
 						
@@ -201,6 +201,8 @@ public class TraitementRequete implements Runnable {
 					{
 						System.out.println("ERROR: serveur > erreur lors de l'extraction des donnÃ©es utilisateur de la base");
 					}
+					
+					
 					
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
@@ -235,6 +237,8 @@ public class TraitementRequete implements Runnable {
 		    case "synchronisation":
 		    	System.out.println("INFORMATION: serveur:synchro > demande recue");
 		    	demandeSynchronisation(reqClient);
+		    	//RecevoirLigneBaseTxt(); --> ajouter la ligne a la base txt --> convertir la base txt en base xml
+		    	//Envoyer/Recevoir message après comparaison
 		    	
 		        break;
 		        

@@ -13,6 +13,7 @@ public class ConfigurationServer {
 	private ListeClientConnecte liste;
 	private Integer nbClientMax;
 	private BaseServeur base;
+	private String os;
 
 	// constructeur récupérant information dans un fichier de configuration
 	public ConfigurationServer() throws IOException, MissedParametersServerExeption  {
@@ -22,14 +23,26 @@ public class ConfigurationServer {
 			repertoire = "stockage";
 			nbClientMax = 5;
 			liste = new ListeClientConnecte();
+			String chemin;
+			os = "windows";
 			
-			String chemin = System.getProperty("user.dir") + "/serverUtilisateur.xml";
+			if(os == "linux") {
+				chemin = System.getProperty("user.dir") + "/serverRepertoire.xml";
+			} else {
+				chemin = System.getProperty("user.dir") + "\\serverRepertoire.xml";
+			}
 			
 			base = new BaseServeur(chemin);
 			
 			// ouverture du fichier contenant la configuration du client
 			String ligne;
-	        String fichier = System.getProperty("user.dir") + "/"+ "config-serveur.conf";
+			String fichier;
+			
+			if(os == "linux") {
+				fichier = System.getProperty("user.dir") + "/"+ "config-serveur.conf";
+			} else {
+				fichier = System.getProperty("user.dir") + "\\"+ "config-serveur.conf";
+			}
 	       
 	        // ouverture du fichier en entrée
 	        InputStream ips = new FileInputStream(fichier); 
@@ -53,6 +66,10 @@ public class ConfigurationServer {
 	            } else if (tokens[0].contains("portServeur")){
 	            	
 	            	portServeur = Integer.valueOf(tokens[1]);
+	            	
+				} else if (tokens[0].contains("os")){
+	            	
+	            	os = tokens[1];
 				}
 	            
 	        }

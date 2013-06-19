@@ -210,11 +210,12 @@ public class Synchronisation implements Runnable {
 	
 	public void run() {
 		
+		String chaine = "";
+		
 		while(true) {
 			
 			
 			try {
-				 System.out.println("Sleep Synchro");
 		         Thread.sleep(5*60*10);
 		     } catch (Exception e) {
 		         System.out.println("Got an exception on sleep!");
@@ -234,7 +235,7 @@ public class Synchronisation implements Runnable {
 				msg.synchronisationConstructionRequest(configClient.getUtilisateur(), configClient.getSessionid());
 				
 				while(configClient.getEstConnecte() != true)  {
-					System.out.println("En Attente de connection");
+					System.out.println("Synchro : En Attente de connection");
 					try {
 						Thread.sleep(200);
 					} catch (InterruptedException e) {
@@ -253,7 +254,7 @@ public class Synchronisation implements Runnable {
 				System.out.println("INFORMATION client:synchro > emission de la requÃªte de synchronisation effectue");
 				
 				String StringXMLServeur = gestionSocket.recevoirMessage();
-				System.out.println("Reception de la baseXML Serveur sous forme de message : " + StringXMLServeur);
+				System.out.println("Synchro : Reception de la baseXML Serveur sous forme de message : " + StringXMLServeur);
 				
 				try {
 					DocumentBuilder dBuilderServer = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -262,7 +263,7 @@ public class Synchronisation implements Runnable {
 					
 					try {
 						
-						System.out.println("Transforme le message contenant la base XML en arbre XML");
+						System.out.println("Synchro : Transforme le message contenant la base XML en arbre XML");
 						org.w3c.dom.Document docServer = dBuilderServer.parse(stream);
 	
 						
@@ -270,7 +271,7 @@ public class Synchronisation implements Runnable {
 						docServer.getDocumentElement().normalize();
 	
 		
-						System.out.println("Recuperation base client");
+						System.out.println("Synchro : Recuperation base client");
 						BaseClient baseClient = new BaseClient(configClient.getRepertoire(), configClient.getOs());
 						baseClient.recupererBases("basetxtClient", "baseXMLClient", configClient.getUtilisateur());
 						
@@ -316,12 +317,36 @@ public class Synchronisation implements Runnable {
 										
 										//si dateClient > dateServeur
 										if (retourDate == 1) {
-											System.out.println("envoyer l'element au serveur depuis le client : " + eElement.getElementsByTagName("path").item(0).getTextContent());
+											System.out.println("Synchro : envoyer l'element au serveur depuis le client : " + eElement.getElementsByTagName("path").item(0).getTextContent());
+											
+											//Création de la chaine à envoyer à la baseServeur
+											
+											if(eElement.getElementsByTagName("type").item(0).getTextContent() == "fichier") {
+												chaine = "Fichier  : " + eElement.getElementsByTagName("path").item(0).getTextContent() + " " + eElement.getElementsByTagName("date").item(0).getTextContent() + " " + eElement.getElementsByTagName("size").item(0).getTextContent() + System.getProperty("line.separator");
+											}
+											else {
+										      	chaine = "Dossier  : " + eElement.getElementsByTagName("path").item(0).getTextContent() + " " + eElement.getElementsByTagName("date").item(0).getTextContent() + " " + eElement.getElementsByTagName("size").item(0).getTextContent() + System.getProperty("line.separator");
+											}
+											
+											//Envoi de cette chaine
+											gestionSocket.envoyerMessage(chaine);
 										}
 										
 										//si dateServeur > dateClient
 										else if(retourDate == 2) {
-											System.out.println("envoyer l'element au client depuis le serveur : "  + eElement.getElementsByTagName("path").item(0).getTextContent());
+											System.out.println("Synchro : envoyer l'element au client depuis le serveur : "  + eElement.getElementsByTagName("path").item(0).getTextContent());
+											
+											//Création de la chaine à envoyer à la baseServeur
+											
+											if(eElement.getElementsByTagName("type").item(0).getTextContent() == "fichier") {
+												chaine = "Fichier  : " + eElement.getElementsByTagName("path").item(0).getTextContent() + " " + eElement.getElementsByTagName("date").item(0).getTextContent() + " " + eElement.getElementsByTagName("size").item(0).getTextContent() + System.getProperty("line.separator");
+											}
+											else {
+										      	chaine = "Dossier  : " + eElement.getElementsByTagName("path").item(0).getTextContent() + " " + eElement.getElementsByTagName("date").item(0).getTextContent() + " " + eElement.getElementsByTagName("size").item(0).getTextContent() + System.getProperty("line.separator");
+											}
+											
+											//Envoi de cette chaine
+											gestionSocket.envoyerMessage(chaine);
 										}
 										
 										else if(retourDate == 3) {
@@ -330,7 +355,19 @@ public class Synchronisation implements Runnable {
 									}
 									
 									else { // n'est pas dans la base
-										System.out.println("ajouter l'element au serveur depuis le client : "  + eElement.getElementsByTagName("path").item(0).getTextContent());
+										System.out.println("Synchro : ajouter l'element au serveur depuis le client : "  + eElement.getElementsByTagName("path").item(0).getTextContent());
+										
+										//Création de la chaine à envoyer à la baseServeur
+										
+										if(eElement.getElementsByTagName("type").item(0).getTextContent() == "fichier") {
+											chaine = "Fichier  : " + eElement.getElementsByTagName("path").item(0).getTextContent() + " " + eElement.getElementsByTagName("date").item(0).getTextContent() + " " + eElement.getElementsByTagName("size").item(0).getTextContent() + System.getProperty("line.separator");
+										}
+										else {
+									      	chaine = "Dossier  : " + eElement.getElementsByTagName("path").item(0).getTextContent() + " " + eElement.getElementsByTagName("date").item(0).getTextContent() + " " + eElement.getElementsByTagName("size").item(0).getTextContent() + System.getProperty("line.separator");
+										}
+										
+										//Envoi de cette chaine
+										gestionSocket.envoyerMessage(chaine);
 									}
 					
 									

@@ -1,10 +1,17 @@
 package Serveur;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.StringWriter;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -16,6 +23,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -32,6 +40,7 @@ public class BaseServeur {
 		xpath = XPathFactory.newInstance().newXPath();
 		
 		inputSource1 = new InputSource(_chemin);
+
 		
 	}
 
@@ -145,4 +154,215 @@ public class BaseServeur {
 
 		return resultat;
 	}
+	
+    /* Transforme la base texte en base XML
+     * @param chemin de la base texte
+     * @param nom de l'utilisateur
+     * @param nom à donner à la base XML créée
+     */
+    public void baseToXML(String cheminBase, String nomUser, String nomBaseXML, String osChoisi) {
+    	
+  	try {
+  		 
+  		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+  		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+   
+  		// root elements
+  		Document doc = docBuilder.newDocument();
+  		Element rootElement = doc.createElement("server");
+  		doc.appendChild(rootElement);
+   
+  		// Name elements
+  		Element user = doc.createElement("user");
+  		rootElement.appendChild(user);
+   
+  		// set attribute to Name element
+  		Attr attr = doc.createAttribute("name");
+  		attr.setValue(nomUser);
+  		user.setAttributeNode(attr);
+   
+    	try {
+
+	    	BufferedReader buff1 = new BufferedReader(new FileReader(cheminBase));
+    	 
+	    	try {
+	    		String line;
+		    	// Lecture du fichier ligne par ligne. Cette boucle se termine
+		    	// quand la mÃ©thode retourne la valeur null.
+	    		while ((line = buff1.readLine()) != null) {
+	    			//System.out.println(line);
+	    			
+	    			//mettre le path du Fichier ou du Repertoire trouvÃ© dans le fichier sous forme de string
+	    			String pathFound = line.substring(11,line.lastIndexOf(" ")); 
+	    			pathFound = pathFound.substring(0,pathFound.indexOf(" "));
+	    			
+	    			// Trouver le nom dans le path
+	    			String nameFound = "";
+	    			if(osChoisi == "windows") {
+	    				nameFound = pathFound.substring(pathFound.lastIndexOf("\\")+1,pathFound.lastIndexOf(""));
+	    			}
+	    			else {
+	    				nameFound = pathFound.substring(pathFound.lastIndexOf("/")+1,pathFound.lastIndexOf(""));
+	    			}
+	    			
+	    			//mettre la date sous forme de STring
+	    			String dateFound = lineToDate(line);
+	    			
+	    			// savoir si c'est un fichier ou un dossier et le mettre sous forme de String
+	    			String typeFound = line.substring(0, 7);
+	    			
+	    			//connaître la taille et la mettre sous forme de String
+	    			String sizeFound = lineToSize(line);
+	    			
+	    			
+	    			// Remplir le fichier XML
+	    			
+	    			// data element
+			  		Element data = doc.createElement("data");
+			  		user.appendChild(data);
+			  		
+			  		// type fichier/dossier element
+			  		Element type = doc.createElement("type");
+			  		type.appendChild(doc.createTextNode(typeFound));
+			  		data.appendChild(type);
+			  		
+			  		// owner elements
+			  		Element owner = doc.createElement("owner");
+			  		owner.appendChild(doc.createTextNode(nomUser));
+			  		data.appendChild(owner);
+			   
+			  		// name elements
+			  		Element name = doc.createElement("name");
+			  		name.appendChild(doc.createTextNode(nameFound));
+			  		data.appendChild(name);
+			   
+			  		// date elements
+			  		Element date = doc.createElement("date");
+			  		date.appendChild(doc.createTextNode(dateFound));
+			  		data.appendChild(date);
+			   
+			  		// path elements
+			  		Element path = doc.createElement("path");
+			  		path.appendChild(doc.createTextNode(pathFound));
+			  		data.appendChild(path);
+			  		
+			  		// size elements
+			  		Element size = doc.createElement("size");
+			  		size.appendChild(doc.createTextNode(sizeFound));
+			  		data.appendChild(size);
+			  		
+//			  		// sha1 elements
+//			  		Element sha1 = doc.createElement("sha1");
+//			  		sha1.appendChild(doc.createTextNode("xxxxxx"));
+//			  		data.appendChild(sha1);
+	    		}
+	    	} finally {
+	    		// dans tous les cas, on ferme nos flux
+	    		System.out.println("Fermeture du flux");
+	    		buff1.close();
+	    	}
+	  		
+	   
+	  		// write the content into xml file
+
+	  		TransformerFactory transformerFactory = TransformerFactory.newInstance();
+	  		Transformer transformer = transformerFactory.newTransformer();
+	  		transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+	  		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+	  		DOMSource source = new DOMSource(doc);
+	  		StreamResult result = new StreamResult(new File(nomBaseXML));
+	   
+	  		// Output to console for testing
+	  		// StreamResult result = new StreamResult(System.out);
+	   
+	  		transformer.transform(source, result);
+	   
+	  		System.out.println("File saved!");
+  		
+    	} catch (IOException ioe) {
+    	// erreur de fermeture des flux
+    		System.out.println("Erreur --" + ioe.toString());
+    	}
+    	
+  	  } catch (ParserConfigurationException pce) {
+  		  pce.printStackTrace();
+  	  } catch (TransformerException tfe) {
+  		  tfe.printStackTrace();
+  	  }
+  	}
+    
+    /*Trouve la date dans une chaine de caractère enregistrée dans la base
+     * @param ligne de la base à découper
+     */
+    public static String lineToDate(String line) {
+    	String date = "";
+    	String chaine = "";
+    	String chaine1 = "";
+    	
+    	chaine = line.substring(11,line.lastIndexOf(" "));
+    	//System.out.println("Etape 1 : " + chaine);
+    	
+    	chaine1 = chaine.substring(chaine.indexOf(" "),chaine.lastIndexOf(""));
+    	//System.out.println("Etape 2 : " + chaine1);
+    	
+    	date = chaine1.substring(1,chaine1.lastIndexOf(""));
+    	//System.out.println("Date : " + date);
+    	
+    	return(date);
+    }
+    
+    /*Trouve la taille dans une chaine de caractère enregistrée dans la base
+     * @param ligne de la base à découper
+     */
+    public static String lineToSize(String line) {
+    	String size = "";
+    	String chaine = "";
+    	String chaine1 = "";
+    	String chaine2 = "";
+    	
+    	chaine = line.substring(11,line.lastIndexOf(""));
+    	//System.out.println("Etape 1 : " + chaine);
+    	
+    	chaine1 = chaine.substring(chaine.indexOf(" "),chaine.lastIndexOf(""));
+    	//System.out.println("Etape 2 : " + chaine1);
+    	
+    	chaine2 = chaine1.substring(chaine1.lastIndexOf(" "),chaine1.lastIndexOf(""));
+    	
+    	size = chaine2.substring(1,chaine2.lastIndexOf(""));
+    	//System.out.println("Size : " + size);
+    	
+    	return(size);
+    }
+    
+	/* Ecris dans un fichier en mode append (à la fin du fichier en le modifiant)
+	 * @param nom du fichier dans lequel écrire
+	 * @param texte à écrire dans ce fichier
+	 */
+    public static void ecrire(String nomFic, String texte) {
+       
+        //Mettre le chemin du fichier en string
+
+    	String adressedufichier = System.getProperty("user.dir") + "/"+ nomFic;
+
+   
+        try {
+
+            FileWriter fw = new FileWriter(adressedufichier, true); // nouvelle ouverture fichier en Ã©criture ; true = append Ã  la fin du fichier
+           
+            BufferedWriter output = new BufferedWriter(fw); // ouverture du buffer d'Ã©criture
+           
+            output.write(texte); // Ã©crit le texte en sortie
+           
+            output.flush(); // envoie le texte dans le fichier
+   
+            output.close(); // fermeture du fichier
+
+            System.out.println("Ecriture dans le fichier...");
+        }
+        catch(IOException ioe){ // gestion de l'exception
+            System.out.print("Erreur : ");
+            ioe.printStackTrace();
+            }
+
+    }
 }
